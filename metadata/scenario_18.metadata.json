@@ -1,0 +1,98 @@
+{
+  "project_id": "1",
+  "scenario_id": "18",
+  "nodes": [
+    {
+      "id": "18",
+      "label": "",
+      "type": "Scenario",
+      "properties": {
+        "description": "",
+        "implementation": ""
+      }
+    },
+    {
+      "id": "STEP_1",
+      "label": "START",
+      "type": "Start",
+      "persona": "System",
+      "properties": {
+        "description": "",
+        "implementation": ""
+      }
+    },
+    {
+      "id": "STEP_2",
+      "label": "<title>",
+      "type": "<screen|process>",
+      "persona": "<persona>",
+      "properties": {
+        "description": "",
+        "implementation": ""
+      }
+    },
+    {
+      "id": "STEP_3",
+      "label": "<title>",
+      "type": "<screen|process>",
+      "persona": "<persona>",
+      "properties": {
+        "description": "",
+        "implementation": ""
+      }
+    },
+    {
+      "id": "STEP_4",
+      "label": "<title>",
+      "type": "<screen|process>",
+      "persona": "<persona>",
+      "properties": {
+        "description": "",
+        "implementation": ""
+      }
+    },
+    {
+      "id": "STEP_5",
+      "label": "END",
+      "type": "End",
+      "persona": "",
+      "properties": {
+        "description": "",
+        "implementation": ""
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "startNode": "18",
+      "endNode": "STEP_1",
+      "relationship": "HAS_STEP"
+    },
+    {
+      "startNode": "STEP_1",
+      "endNode": "STEP_2",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_2",
+      "endNode": "STEP_3",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_3",
+      "endNode": "STEP_4",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_4",
+      "endNode": "STEP_5",
+      "relationship": "HAS_NEXT_STEP"
+    }
+  ],
+  "fields": [],
+  "metadata": {
+    "created_at": "2025-08-07T19:16:05.818742",
+    "updated_at": "2025-08-07T19:16:05.818742",
+    "version": "1.0"
+  }
+}
