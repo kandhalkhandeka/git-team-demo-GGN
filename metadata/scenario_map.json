@@ -1,0 +1,11 @@
+{
+  "projectName": "1",
+  "status": "active",
+  "scenarios": [],
+  "connections": [],
+  "dependencies": [
+    "Trigger",
+    "Dependency",
+    "Other"
+  ]
+}
