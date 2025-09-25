@@ -1,0 +1,663 @@
+{
+  "steps": [
+    {
+      "id": "STEP_1",
+      "step": 1,
+      "type": "Screen",
+      "label": "Open Cases Review and Reassignment",
+      "description": "On this screen, you will see a list of open cases currently assigned to staff members who are departing. Each case displays key details such as the case ID, client name, case type, and the current assignee. You can select one or more cases that need to be reassigned. To reassign, choose an available team member from the dropdown or search field. Once you have made your selections, click the 'Reassign Selected Cases' button to begin the reassignment process. Guidance is provided to ensure you select only eligible cases and team members.",
+      "details": [
+        {
+          "label": "Open Cases Assigned to Departing Staff",
+          "repeatable_section": true,
+          "fields": [
+            {
+              "label": "Case ID",
+              "type": "text",
+              "required": true,
+              "error_message": "Case ID is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Client Name",
+              "type": "text",
+              "required": true,
+              "error_message": "Client name is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Case Type",
+              "type": "dropdown",
+              "required": true,
+              "error_message": "Case type is required.",
+              "options": [
+                "Support Request",
+                "Incident Report",
+                "Inquiry",
+                "Other"
+              ],
+              "readOnly": true
+            },
+            {
+              "label": "Current Assignee",
+              "type": "text",
+              "required": true,
+              "error_message": "Current assignee is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Select for Reassignment",
+              "type": "checkbox",
+              "required": false,
+              "error_message": "Select this case if you wish to reassign.",
+              "options": [
+                "Selected"
+              ],
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "label": "Team Member Selection for Reassignment",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Available Team Member",
+              "type": "dropdown",
+              "required": true,
+              "error_message": "Please select a team member for reassignment.",
+              "options": [
+                "John Smith",
+                "Jane Doe",
+                "Alex Johnson",
+                "Maria Lee"
+              ],
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "At least one case must be selected for reassignment.",
+        "Cannot select cases that are already closed.",
+        "Selected team member must be available and eligible for new cases.",
+        "Cannot assign cases to a departing staff member.",
+        "No duplicate case selection allowed."
+      ],
+      "buttons": [
+        {
+          "label": "Reassign Selected Cases",
+          "actor": "Supervisor",
+          "description": "Initiates the reassignment process for the selected cases to the chosen team member.",
+          "action_ids": [
+            "ACTION_4"
+          ]
+        }
+      ],
+      "owner": "Supervisor",
+      "step_number": 1,
+      "node_id": "STEP_1",
+      "actions": [
+        {
+          "id": "ACTION_1",
+          "name": "Show Loading Indicator for Data Fetch",
+          "implementation": "Display a loading indicator on STEP_1 while fetching open cases and available team members. Hide the indicator once data is loaded or if an error occurs.",
+          "trigger": "rule",
+          "triggerCondition": "Supervisor initiates screen load or clicks 'Refresh' button.",
+          "sequence": 1,
+          "linkedWidgetIds": [
+            "STEP_1"
+          ]
+        },
+        {
+          "id": "ACTION_2",
+          "name": "Fetch and Validate Open Cases Data",
+          "implementation": "Fetch the latest list of open cases assigned to departing staff and available team members. Filter out closed or ineligible cases and departing team members. If data fetch fails, log the error, display a detailed error message, and provide a retry option. Record the event in the audit log.",
+          "trigger": "assignment",
+          "triggerCondition": "Loading indicator is shown and data fetch is initiated.",
+          "sequence": 2,
+          "linkedWidgetIds": [
+            "STEP_1"
+          ]
+        },
+        {
+          "id": "ACTION_3",
+          "name": "Handle Data Fetch Error",
+          "implementation": "If fetching open cases or team members fails, display a clear error message on STEP_1, log the error for audit purposes, and provide options to retry or contact support.",
+          "trigger": "assignment",
+          "triggerCondition": "Data fetch fails during screen load or refresh.",
+          "sequence": 3,
+          "linkedWidgetIds": [
+            "STEP_1"
+          ]
+        },
+        {
+          "id": "ACTION_4",
+          "name": "Validate Case and Team Member Selection",
+          "implementation": "When Supervisor clicks 'Reassign Selected Cases', validate that at least one open case is selected, no duplicate or closed cases are chosen, and the selected team member is available and not departing. If validation fails, display specific error messages and guidance. Log validation attempts and failures for audit.",
+          "trigger": "rule",
+          "triggerCondition": "Supervisor clicks 'Reassign Selected Cases' button.",
+          "sequence": 4,
+          "linkedWidgetIds": [
+            "STEP_1"
+          ]
+        },
+        {
+          "id": "ACTION_5",
+          "name": "Trigger Reassign Cases Process",
+          "implementation": "If selection validation passes, submit selected cases and team member to the eligibility check process. Log the initiation of reassignment for audit trail.",
+          "trigger": "assignment",
+          "triggerCondition": "Selection validation passes after 'Reassign Selected Cases' is clicked.",
+          "sequence": 5,
+          "linkedWidgetIds": [
+            "STEP_2"
+          ]
+        },
+        {
+          "id": "ACTION_6",
+          "name": "Reset Selections After Completion or Cancellation",
+          "implementation": "Clear all selected cases and team member choices on STEP_1 after reassignment is completed or cancelled, ensuring a clean state for new actions.",
+          "trigger": "assignment",
+          "triggerCondition": "Supervisor returns to STEP_1 after workflow completion or cancellation.",
+          "sequence": 6,
+          "linkedWidgetIds": [
+            "STEP_1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "STEP_2",
+      "step": 2,
+      "type": "Assignment",
+      "label": "Reassign Cases Process",
+      "description": "When the Supervisor clicks the 'Reassign Selected Cases' button, the system processes the selected cases and prepares them for reassignment to the chosen available team member. The system verifies that the selected team member is available and eligible to receive new cases.",
+      "Input Parameter": [
+        "status",
+        "message"
+      ],
+      "details": {
+        "assignments": [
+          {
+            "label": "Reassign Cases Process",
+            "logic": "Upon Supervisor action ('Reassign Selected Cases'), the system collects the selected case IDs and the chosen team member. The system checks the availability and eligibility of the selected team member to receive new cases. If the team member is not available or eligible, an error message is displayed and the process is halted. If the team member is available and eligible, the system prepares the selected cases for reassignment."
+          }
+        ]
+      },
+      "step_number": 2,
+      "node_id": "STEP_2",
+      "actions": [
+        {
+          "id": "ACTION_1",
+          "name": "Show Eligibility Check Progress Indicator",
+          "implementation": "Display a progress indicator on the current screen (STEP_1 or STEP_3) while eligibility checks are being performed.",
+          "trigger": "rule",
+          "triggerCondition": "Eligibility check is initiated after selection validation.",
+          "sequence": 1,
+          "linkedWidgetIds": [
+            "STEP_1",
+            "STEP_3"
+          ]
+        },
+        {
+          "id": "ACTION_2",
+          "name": "Perform Eligibility Check for Reassignment",
+          "implementation": "Verify that the selected team member is available, not on leave, and does not exceed maximum case load. Ensure all selected cases are open and eligible for reassignment. Log all eligibility checks and outcomes for audit. If eligibility fails, record the failure and reason.",
+          "trigger": "assignment",
+          "triggerCondition": "Eligibility check progress indicator is shown.",
+          "sequence": 2,
+          "linkedWidgetIds": [
+            "STEP_2"
+          ]
+        },
+        {
+          "id": "ACTION_3",
+          "name": "Navigate to Reassignment Eligibility Verification Screen",
+          "implementation": "If eligibility checks pass, transition to STEP_3 to display a summary of selected cases and team member eligibility. Log navigation event for audit.",
+          "trigger": "assignment",
+          "triggerCondition": "Eligibility check passes.",
+          "sequence": 3,
+          "linkedWidgetIds": [
+            "STEP_3"
+          ]
+        },
+        {
+          "id": "ACTION_4",
+          "name": "Display Eligibility Error and Allow Correction",
+          "implementation": "If eligibility check fails, display a detailed error message on the active screen (STEP_1 if still there, otherwise STEP_3). Provide guidance for correcting selections and allow retry. Log error and user correction attempts for audit.",
+          "trigger": "assignment",
+          "triggerCondition": "Eligibility check fails.",
+          "sequence": 4,
+          "linkedWidgetIds": [
+            "STEP_1",
+            "STEP_3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "STEP_3",
+      "step": 3,
+      "type": "Screen",
+      "label": "Reassignment Eligibility Verification",
+      "description": "After you click 'Reassign Selected Cases', this screen displays a summary of the cases you have selected and the team member chosen for reassignment. The system will verify the eligibility and availability of the selected team member. You will see confirmation of the cases to be reassigned and any warnings or errors if the team member cannot accept new cases. Review the information and confirm to proceed.",
+      "details": [
+        {
+          "label": "Selected Cases for Reassignment",
+          "repeatable_section": true,
+          "fields": [
+            {
+              "label": "Case ID",
+              "type": "text",
+              "required": true,
+              "error_message": "Case ID is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Client Name",
+              "type": "text",
+              "required": true,
+              "error_message": "Client name is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Case Type",
+              "type": "dropdown",
+              "required": true,
+              "error_message": "Case type is required.",
+              "options": [
+                "Support Request",
+                "Incident Report",
+                "Inquiry",
+                "Other"
+              ],
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "label": "Team Member Eligibility",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Selected Team Member",
+              "type": "dropdown",
+              "required": true,
+              "error_message": "Team member selection is required.",
+              "options": [
+                "John Smith",
+                "Jane Doe",
+                "Alex Johnson",
+                "Maria Lee"
+              ],
+              "readOnly": true
+            },
+            {
+              "label": "Eligibility Status",
+              "type": "text",
+              "required": true,
+              "error_message": "Eligibility status is required.",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Selected team member must not exceed maximum case load.",
+        "Team member must not be on leave or unavailable.",
+        "All selected cases must be open and eligible for reassignment.",
+        "Cannot proceed if any case fails eligibility check."
+      ],
+      "buttons": [
+        {
+          "label": "Confirm Reassignment",
+          "actor": "Supervisor",
+          "description": "Confirms the reassignment of selected cases to the eligible team member.",
+          "action_ids": [
+            "ACTION_1",
+            "ACTION_2"
+          ]
+        },
+        {
+          "label": "Cancel",
+          "actor": "Supervisor",
+          "description": "Cancels the reassignment process and returns to the previous screen.",
+          "action_ids": [
+            "ACTION_4"
+          ]
+        }
+      ],
+      "owner": "Supervisor",
+      "step_number": 3,
+      "node_id": "STEP_3",
+      "actions": [
+        {
+          "id": "ACTION_1",
+          "name": "Show Assignment Progress Indicator",
+          "implementation": "Display a loading indicator on STEP_3 while the assignment process is being performed.",
+          "trigger": "rule",
+          "triggerCondition": "Supervisor clicks 'Confirm Reassignment'.",
+          "sequence": 1,
+          "linkedWidgetIds": [
+            "STEP_3"
+          ]
+        },
+        {
+          "id": "ACTION_2",
+          "name": "Trigger Assign to Team Member Process",
+          "implementation": "Initiate the assignment of selected cases to the eligible team member. Log the assignment initiation for audit trail.",
+          "trigger": "assignment",
+          "triggerCondition": "Assignment progress indicator is shown after 'Confirm Reassignment' is clicked.",
+          "sequence": 2,
+          "linkedWidgetIds": [
+            "STEP_4"
+          ]
+        },
+        {
+          "id": "ACTION_3",
+          "name": "Display Assignment Error and Allow Retry",
+          "implementation": "If assignment fails (e.g., database error), display a clear error message on STEP_3, log the error, and provide options to retry or cancel. If the user is not on STEP_3, display the error on the current screen.",
+          "trigger": "assignment",
+          "triggerCondition": "Assignment process fails.",
+          "sequence": 3,
+          "linkedWidgetIds": [
+            "STEP_3"
+          ]
+        },
+        {
+          "id": "ACTION_4",
+          "name": "Cancel Reassignment and Return to Open Cases Review",
+          "implementation": "Cancel the reassignment workflow, log the cancellation event, and navigate back to STEP_1. Reset all selections and workflow state.",
+          "trigger": "rule",
+          "triggerCondition": "Supervisor clicks 'Cancel' button.",
+          "sequence": 4,
+          "linkedWidgetIds": [
+            "STEP_1"
+          ]
+        },
+        {
+          "id": "ACTION_5",
+          "name": "Display Eligibility Validation Error",
+          "implementation": "If eligibility validation fails after 'Confirm Reassignment' (e.g., team member exceeds case load, is unavailable, or cases are not eligible), display a clear error message on STEP_3, log the error, and allow the user to correct selections.",
+          "trigger": "assignment",
+          "triggerCondition": "Eligibility validation fails after 'Confirm Reassignment'.",
+          "sequence": 5,
+          "linkedWidgetIds": [
+            "STEP_3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "STEP_4",
+      "step": 4,
+      "type": "Assignment",
+      "label": "Assign to Team Member Process",
+      "description": "The system assigns the selected open cases to the chosen available team member. Each case record is updated to reflect the new assignee, ensuring that all cases have an assigned staff member and none are left without oversight.",
+      "Input Parameter": [
+        "status",
+        "message"
+      ],
+      "details": {
+        "assignments": [
+          {
+            "label": "Assign to Team Member Process",
+            "logic": "For each selected case, the system updates the case record to set the new assignee as the chosen team member. The system ensures that all cases are assigned and that no case is left without an assignee. If any error occurs during the update (e.g., database connectivity issues), the system logs the error and notifies the Supervisor."
+          }
+        ]
+      },
+      "step_number": 4,
+      "node_id": "STEP_4",
+      "actions": [
+        {
+          "id": "ACTION_1",
+          "name": "Perform Case Assignment and Log Event",
+          "implementation": "For each selected case, update the case record to set the new assignee as the chosen team member. Ensure all cases are assigned and none are left without oversight. Log each assignment event for audit and compliance. If an error occurs, record the error and trigger error handling.",
+          "trigger": "assignment",
+          "triggerCondition": "Assignment process is triggered from eligibility verification screen.",
+          "sequence": 1,
+          "linkedWidgetIds": [
+            "STEP_4"
+          ]
+        },
+        {
+          "id": "ACTION_2",
+          "name": "Show Assignment Progress Indicator",
+          "implementation": "Display a progress indicator on STEP_5 while case assignment is being performed.",
+          "trigger": "assignment",
+          "triggerCondition": "Assignment is in progress.",
+          "sequence": 2,
+          "linkedWidgetIds": [
+            "STEP_5"
+          ]
+        },
+        {
+          "id": "ACTION_3",
+          "name": "Mark Workflow Completion and Navigate to Confirmation",
+          "implementation": "After successful assignment, mark the workflow as complete, log the completion event, and navigate to STEP_5 for confirmation.",
+          "trigger": "assignment",
+          "triggerCondition": "Assignment completes without errors.",
+          "sequence": 3,
+          "linkedWidgetIds": [
+            "STEP_5"
+          ]
+        },
+        {
+          "id": "ACTION_4",
+          "name": "Display Assignment Error and Allow Retry or Rollback",
+          "implementation": "If assignment fails (e.g., database error), display a detailed error message on the active screen (STEP_3 if user is there, otherwise STEP_5). Log the error, provide options to retry, rollback changes, or return to Open Cases Review. Ensure no case is left without oversight.",
+          "trigger": "assignment",
+          "triggerCondition": "Assignment fails due to system or database error.",
+          "sequence": 4,
+          "linkedWidgetIds": [
+            "STEP_3",
+            "STEP_5"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "STEP_5",
+      "step": 5,
+      "type": "Screen",
+      "label": "Case Assignment Confirmation",
+      "description": "This screen confirms that the selected cases have been successfully reassigned to the chosen team member. You will see a summary of the updated case assignments, including the new assignee for each case. The system ensures that all cases have an assigned staff member and none are left without oversight. You may acknowledge the completion and return to the case list.",
+      "details": [
+        {
+          "label": "Updated Case Assignments",
+          "repeatable_section": true,
+          "fields": [
+            {
+              "label": "Case ID",
+              "type": "text",
+              "required": true,
+              "error_message": "Case ID is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Client Name",
+              "type": "text",
+              "required": true,
+              "error_message": "Client name is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Case Type",
+              "type": "dropdown",
+              "required": true,
+              "error_message": "Case type is required.",
+              "options": [
+                "Support Request",
+                "Incident Report",
+                "Inquiry",
+                "Other"
+              ],
+              "readOnly": true
+            },
+            {
+              "label": "New Assignee",
+              "type": "text",
+              "required": true,
+              "error_message": "New assignee is required.",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "All cases must have a valid new assignee.",
+        "No case should be left without oversight.",
+        "Case assignment records must be updated successfully.",
+        "Cannot assign cases to a team member who is not eligible."
+      ],
+      "buttons": [
+        {
+          "label": "Acknowledge and Return",
+          "actor": "System",
+          "description": "Acknowledges the completion of the reassignment and returns to the open cases list.",
+          "action_ids": [
+            "ACTION_1"
+          ]
+        }
+      ],
+      "owner": "System",
+      "step_number": 5,
+      "node_id": "STEP_5",
+      "actions": [
+        {
+          "id": "ACTION_1",
+          "name": "Return to Open Cases Review and Reset Workflow",
+          "implementation": "After Supervisor clicks 'Acknowledge and Return', display confirmation message, log the workflow completion, reset all selections and workflow state, and navigate to STEP_1 for new actions.",
+          "trigger": "rule",
+          "triggerCondition": "Supervisor clicks 'Acknowledge and Return' button.",
+          "sequence": 1,
+          "linkedWidgetIds": [
+            "STEP_1"
+          ]
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "startNode": "STEP_1",
+      "endNode": "STEP_2",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_2",
+      "endNode": "STEP_3",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_3",
+      "endNode": "STEP_4",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_4",
+      "endNode": "STEP_5",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_1",
+      "endNode": "Open Cases Assigned to Departing Staff",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_1",
+      "endNode": "Team Member Selection for Reassignment",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Open Cases Assigned to Departing Staff",
+      "endNode": "Case ID",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Open Cases Assigned to Departing Staff",
+      "endNode": "Client Name",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Open Cases Assigned to Departing Staff",
+      "endNode": "Case Type",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Open Cases Assigned to Departing Staff",
+      "endNode": "Current Assignee",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Open Cases Assigned to Departing Staff",
+      "endNode": "Select for Reassignment",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Team Member Selection for Reassignment",
+      "endNode": "Available Team Member",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_3",
+      "endNode": "Selected Cases for Reassignment",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_3",
+      "endNode": "Team Member Eligibility",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Selected Cases for Reassignment",
+      "endNode": "Case ID",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Selected Cases for Reassignment",
+      "endNode": "Client Name",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Selected Cases for Reassignment",
+      "endNode": "Case Type",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Team Member Eligibility",
+      "endNode": "Selected Team Member",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Team Member Eligibility",
+      "endNode": "Eligibility Status",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_5",
+      "endNode": "Updated Case Assignments",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Updated Case Assignments",
+      "endNode": "Case ID",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Updated Case Assignments",
+      "endNode": "Client Name",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Updated Case Assignments",
+      "endNode": "Case Type",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Updated Case Assignments",
+      "endNode": "New Assignee",
+      "relationship": "HAS_FIELD"
+    }
+  ]
+}
