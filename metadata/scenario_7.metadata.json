@@ -1,0 +1,3711 @@
+{
+  "steps": [
+    {
+      "id": "STEP_1",
+      "step": 1,
+      "type": "ScreenQueue",
+      "label": "Application Data Entry Sequence",
+      "description": "Applicant completes the initial application sequence, entering all required information and documentation.",
+      "screenQueueName": "Application Data Entry Sequence",
+      "assignedTo": "Applicant",
+      "screenSequence": [
+        {
+          "screenId": "STEP_1_1",
+          "screenSequence": 1,
+          "visibility": {
+            "show_conditions": [
+              "previous_screen_completed",
+              "user_role == 'Applicant'"
+            ],
+            "hide_conditions": [
+              "user_not_eligible",
+              "workflow_cancelled"
+            ],
+            "conditional_logic": {
+              "default_visibility": true,
+              "depends_on_previous": false,
+              "required_data": [],
+              "user_permissions": [
+                "Applicant"
+              ]
+            }
+          }
+        },
+        {
+          "screenId": "STEP_1_2",
+          "screenSequence": 2,
+          "visibility": {
+            "show_conditions": [
+              "previous_screen_completed",
+              "user_role == 'Applicant'"
+            ],
+            "hide_conditions": [
+              "user_not_eligible",
+              "workflow_cancelled"
+            ],
+            "conditional_logic": {
+              "default_visibility": true,
+              "depends_on_previous": true,
+              "required_data": [
+                "Application Channel"
+              ],
+              "user_permissions": [
+                "Applicant"
+              ]
+            }
+          }
+        },
+        {
+          "screenId": "STEP_1_3",
+          "screenSequence": 3,
+          "visibility": {
+            "show_conditions": [
+              "previous_screen_completed",
+              "user_role == 'Applicant'"
+            ],
+            "hide_conditions": [
+              "user_not_eligible",
+              "workflow_cancelled"
+            ],
+            "conditional_logic": {
+              "default_visibility": true,
+              "depends_on_previous": true,
+              "required_data": [
+                "Household Members"
+              ],
+              "user_permissions": [
+                "Applicant"
+              ]
+            }
+          }
+        },
+        {
+          "screenId": "STEP_1_4",
+          "screenSequence": 4,
+          "visibility": {
+            "show_conditions": [
+              "previous_screen_completed",
+              "user_role == 'Applicant'"
+            ],
+            "hide_conditions": [
+              "user_not_eligible",
+              "workflow_cancelled"
+            ],
+            "conditional_logic": {
+              "default_visibility": true,
+              "depends_on_previous": true,
+              "required_data": [
+                "Describe Disaster Impact"
+              ],
+              "user_permissions": [
+                "Applicant"
+              ]
+            }
+          }
+        },
+        {
+          "screenId": "STEP_1_5",
+          "screenSequence": 5,
+          "visibility": {
+            "show_conditions": [
+              "previous_screen_completed",
+              "user_role == 'Applicant'"
+            ],
+            "hide_conditions": [
+              "user_not_eligible",
+              "workflow_cancelled"
+            ],
+            "conditional_logic": {
+              "default_visibility": true,
+              "depends_on_previous": true,
+              "required_data": [
+                "Total Household Income",
+                "Accessible Liquid Resources",
+                "Disaster-Related Expenses"
+              ],
+              "user_permissions": [
+                "Applicant"
+              ]
+            }
+          }
+        }
+      ],
+      "sequenceLogic": {
+        "type": "linear",
+        "allowBackNavigation": true,
+        "skipLogic": "Screens may be skipped if applicant is not eligible or workflow is cancelled"
+      },
+      "completionLogic": {
+        "type": "all_screens",
+        "conditions": [
+          "All screens in sequence completed",
+          "All required fields validated"
+        ]
+      },
+      "quick_action_buttons": [
+        {
+          "button_id": "Print",
+          "label": "Print",
+          "description": "Prints the eligibility summary for the current application data entry sequence. Attachments are not included.",
+          "type": "utility",
+          "button_type": "quick action button",
+          "icon": "print",
+          "position": "queue-top",
+          "action": {
+            "type": "print",
+            "print_config": {
+              "template": "eligibility_summary",
+              "include_attachments": false
+            }
+          }
+        },
+        {
+          "button_id": "export_pdf",
+          "label": "Export PDF",
+          "description": "Exports the entire application data entry sequence as a PDF document for offline review or record-keeping.",
+          "type": "utility",
+          "button_type": "quick action button",
+          "icon": "download",
+          "position": "queue-top",
+          "action": {
+            "type": "api_call",
+            "endpoint_config": {
+              "endpoint": "/api/export/application-sequence/pdf",
+              "method": "POST",
+              "confirm_required": true,
+              "success_message": "PDF exported successfully.",
+              "error_handling": "toast"
+            }
+          }
+        }
+      ],
+      "screens": [
+        {
+          "screen_number": 1,
+          "id": "STEP_1_1",
+          "step": "1_1",
+          "type": "Screen",
+          "label": "Choose Application Channel",
+          "description": "On this screen, you will select how you wish to apply for disaster benefits. Please choose the most convenient channel for your situation: Online Portal, In-Person Site, or Mobile Unit. Each option may have different requirements or steps. Read the instructions carefully before making your selection.",
+          "details": [
+            {
+              "label": "Application Channel Selection",
+              "repeatable_section": false,
+              "fields": [
+                {
+                  "label": "Application Channel",
+                  "type": "radio",
+                  "required": true,
+                  "error_message": "Please select an application channel.",
+                  "options": [
+                    "Online Portal",
+                    "In-Person Site",
+                    "Mobile Unit"
+                  ],
+                  "readOnly": false
+                }
+              ]
+            }
+          ],
+          "data_validation": [
+            "Must select one application channel before proceeding"
+          ],
+          "buttons": [
+            {
+              "icon": "arrow-right",
+              "position": "bottom-right",
+              "button_type": "screen button",
+              "label": "Continue",
+              "actor": "Applicant",
+              "description": "Proceed to enter household information.",
+              "actions": [
+                "Navigate to Enter Household Information"
+              ]
+            }
+          ],
+          "owner": "Applicant",
+          "step_number": "1_1",
+          "node_id": "STEP_1_1",
+          "navigation": {
+            "menu_group": "Application Start",
+            "display_order": 1,
+            "icon": "channel",
+            "breadcrumb": [
+              "Home",
+              "Benefits",
+              "Application Channel"
+            ]
+          },
+          "page_level_buttons": {
+            "header_buttons": [
+              {
+                "button_id": "Home",
+                "label": "Home",
+                "description": "Return to the dashboard home.",
+                "type": "ghost",
+                "icon": "home",
+                "button_type": "header button",
+                "position": "left",
+                "action": {
+                  "type": "navigation",
+                  "navigation_config": {
+                    "target": "dashboard",
+                    "confirm_required": false,
+                    "confirm_message": "Return to dashboard?",
+                    "data_loss_warning": true
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "Help",
+                "label": "Help",
+                "description": "Get help for choosing an application channel.",
+                "type": "ghost",
+                "icon": "help",
+                "button_type": "header button",
+                "position": "right",
+                "action": {
+                  "type": "modal",
+                  "modal_config": {
+                    "title": "Help: Application Channel",
+                    "content_source": "/help/application-channel",
+                    "size": "medium"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "User_Profile",
+                "label": "User Profile",
+                "description": "View and edit your user profile.",
+                "type": "ghost",
+                "icon": "user",
+                "button_type": "header button",
+                "position": "right",
+                "action": {
+                  "type": "modal",
+                  "modal_config": {
+                    "title": "User Profile",
+                    "content_source": "/profile",
+                    "size": "medium"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              }
+            ],
+            "footer_buttons": [
+              {
+                "button_id": "Continue",
+                "label": "Continue",
+                "description": "Proceed to enter household information.",
+                "type": "primary",
+                "icon": "arrow-right",
+                "button_type": "footer button",
+                "position": "right",
+                "action": {
+                  "type": "workflow_navigation",
+                  "logic": {
+                    "workflow_steps": [
+                      {
+                        "step": 1,
+                        "step_name": "validate_fields",
+                        "description": "Validate that an application channel is selected.",
+                        "actions": [
+                          "ACTION_2"
+                        ],
+                        "conditions": {
+                          "success_message": [
+                            "Application channel selected."
+                          ],
+                          "error_message": [
+                            "Please select an application channel."
+                          ]
+                        }
+                      },
+                      {
+                        "step": 2,
+                        "step_name": "redirect_to_next_screen",
+                        "description": "Navigate to Enter Household Information screen.",
+                        "actions": [
+                          "ACTION_3"
+                        ],
+                        "conditions": {
+                          "success_message": [
+                            "Navigated to household information entry."
+                          ],
+                          "error_message": [
+                            "Navigation failed."
+                          ]
+                        }
+                      }
+                    ],
+                    "execution_flow": {
+                      "sequential": true,
+                      "allow_skip": false,
+                      "retry_on_failure": false,
+                      "max_retries": 0
+                    }
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {
+                  "required_fields": [
+                    {
+                      "field_id": "Application Channel",
+                      "field_name": "Application Channel",
+                      "field_type": "radio",
+                      "validation_type": "mandatory",
+                      "error_message": "Please select an application channel.",
+                      "dependency": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "screen_number": 2,
+          "id": "STEP_1_2",
+          "step": "1_2",
+          "type": "Screen",
+          "label": "Household Information Entry",
+          "description": "Enter details about your household. You will provide names, relationships, disaster date, address, household composition, and contact information. Please ensure all information is accurate and up-to-date. Use the 'Add Household Member' button to enter details for each person living in your household.",
+          "details": [
+            {
+              "label": "Disaster and Address Details",
+              "repeatable_section": false,
+              "fields": [
+                {
+                  "label": "Date of Disaster",
+                  "type": "date/time",
+                  "required": true,
+                  "error_message": "Please enter the date of disaster.",
+                  "readOnly": false
+                },
+                {
+                  "label": "Household Address",
+                  "type": "address",
+                  "required": true,
+                  "error_message": "Please enter a valid address.",
+                  "readOnly": false
+                },
+                {
+                  "label": "Contact Phone Number",
+                  "type": "phone",
+                  "required": true,
+                  "error_message": "Please enter a valid phone number.",
+                  "readOnly": false
+                },
+                {
+                  "label": "Email Address",
+                  "type": "text",
+                  "required": false,
+                  "error_message": "Please enter a valid email address.",
+                  "readOnly": false
+                }
+              ]
+            },
+            {
+              "label": "Household Members",
+              "repeatable_section": true,
+              "fields": [
+                {
+                  "label": "Full Name",
+                  "type": "text",
+                  "required": true,
+                  "error_message": "Please enter the household member's full name.",
+                  "readOnly": false
+                },
+                {
+                  "label": "Relationship to Applicant",
+                  "type": "dropdown",
+                  "required": true,
+                  "error_message": "Please select the relationship.",
+                  "options": [
+                    "Self",
+                    "Spouse",
+                    "Child",
+                    "Parent",
+                    "Sibling",
+                    "Other"
+                  ],
+                  "readOnly": false
+                },
+                {
+                  "label": "Date of Birth",
+                  "type": "date/time",
+                  "required": true,
+                  "error_message": "Please enter the date of birth.",
+                  "readOnly": false
+                },
+                {
+                  "label": "SSN",
+                  "type": "ssn",
+                  "required": false,
+                  "error_message": "Please enter a valid SSN.",
+                  "readOnly": false
+                }
+              ]
+            }
+          ],
+          "data_validation": [
+            "Cannot have more than one 'Self' relationship",
+            "Cannot have duplicate spouse entries",
+            "Birth date cannot be in the future",
+            "SSN must be unique across household members",
+            "If relationship is 'Child', age must be under 18",
+            "If relationship is 'Spouse', only one allowed"
+          ],
+          "buttons": [
+            {
+              "icon": "arrow-right",
+              "position": "bottom-right",
+              "button_type": "screen button",
+              "label": "Continue",
+              "actor": "Applicant",
+              "description": "Proceed to enter disaster impact details.",
+              "actions": [
+                "Navigate to Enter Disaster Impact Details"
+              ]
+            }
+          ],
+          "owner": "Applicant",
+          "step_number": "1_2",
+          "node_id": "STEP_1_2",
+          "navigation": {
+            "menu_group": "Household Information",
+            "display_order": 2,
+            "icon": "users",
+            "breadcrumb": [
+              "Home",
+              "Benefits",
+              "Household Information"
+            ]
+          },
+          "page_level_buttons": {
+            "header_buttons": [
+              {
+                "button_id": "Back",
+                "label": "Back",
+                "description": "Go back to the previous screen.",
+                "type": "ghost",
+                "icon": "arrow-left",
+                "button_type": "header button",
+                "position": "left",
+                "action": {
+                  "type": "navigation",
+                  "navigation_config": {
+                    "target": "STEP_1_1",
+                    "confirm_required": false,
+                    "confirm_message": "Go back to previous screen?",
+                    "data_loss_warning": true
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [
+                    "current_step > 1"
+                  ],
+                  "hide_conditions": [
+                    "first_step"
+                  ]
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "Home",
+                "label": "Home",
+                "description": "Return to the dashboard home.",
+                "type": "ghost",
+                "icon": "home",
+                "button_type": "header button",
+                "position": "left",
+                "action": {
+                  "type": "navigation",
+                  "navigation_config": {
+                    "target": "dashboard",
+                    "confirm_required": false,
+                    "confirm_message": "Return to dashboard?",
+                    "data_loss_warning": true
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "Help",
+                "label": "Help",
+                "description": "Get help for entering household information.",
+                "type": "ghost",
+                "icon": "help",
+                "button_type": "header button",
+                "position": "right",
+                "action": {
+                  "type": "modal",
+                  "modal_config": {
+                    "title": "Help: Household Information",
+                    "content_source": "/help/household-info",
+                    "size": "medium"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "User_Profile",
+                "label": "User Profile",
+                "description": "View and edit your user profile.",
+                "type": "ghost",
+                "icon": "user",
+                "button_type": "header button",
+                "position": "right",
+                "action": {
+                  "type": "modal",
+                  "modal_config": {
+                    "title": "User Profile",
+                    "content_source": "/profile",
+                    "size": "medium"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              }
+            ],
+            "footer_buttons": [
+              {
+                "button_id": "Continue",
+                "label": "Continue",
+                "description": "Proceed to enter disaster impact details.",
+                "type": "primary",
+                "icon": "arrow-right",
+                "button_type": "footer button",
+                "position": "right",
+                "action": {
+                  "type": "workflow_navigation",
+                  "logic": {
+                    "workflow_steps": [
+                      {
+                        "step": 1,
+                        "step_name": "validate_fields",
+                        "description": "Validate household and member information.",
+                        "actions": [
+                          "ACTION_2"
+                        ],
+                        "conditions": {
+                          "success_message": [
+                            "Household information validated."
+                          ],
+                          "error_message": [
+                            "Please complete all required household fields."
+                          ]
+                        }
+                      },
+                      {
+                        "step": 2,
+                        "step_name": "redirect_to_next_screen",
+                        "description": "Navigate to Disaster Impact Details screen.",
+                        "actions": [
+                          "ACTION_3"
+                        ],
+                        "conditions": {
+                          "success_message": [
+                            "Navigated to disaster impact details."
+                          ],
+                          "error_message": [
+                            "Navigation failed."
+                          ]
+                        }
+                      }
+                    ],
+                    "execution_flow": {
+                      "sequential": true,
+                      "allow_skip": false,
+                      "retry_on_failure": false,
+                      "max_retries": 0
+                    }
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {
+                  "required_fields": [
+                    {
+                      "field_id": "Date of Disaster",
+                      "field_name": "Date of Disaster",
+                      "field_type": "date/time",
+                      "validation_type": "mandatory",
+                      "error_message": "Please enter the date of disaster.",
+                      "dependency": ""
+                    },
+                    {
+                      "field_id": "Household Address",
+                      "field_name": "Household Address",
+                      "field_type": "address",
+                      "validation_type": "mandatory",
+                      "error_message": "Please enter a valid address.",
+                      "dependency": ""
+                    },
+                    {
+                      "field_id": "Contact Phone Number",
+                      "field_name": "Contact Phone Number",
+                      "field_type": "phone",
+                      "validation_type": "mandatory",
+                      "error_message": "Please enter a valid phone number.",
+                      "dependency": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "screen_number": 3,
+          "id": "STEP_1_3",
+          "step": "1_3",
+          "type": "Screen",
+          "label": "Disaster Impact Details",
+          "description": "Describe how the disaster has affected your household. Indicate any loss of income, inaccessible resources, disaster-related expenses, and food loss. Provide as much detail as possible to help determine your eligibility.",
+          "details": [
+            {
+              "label": "Disaster Impact Information",
+              "repeatable_section": false,
+              "fields": [
+                {
+                  "label": "Loss of Income",
+                  "type": "checkbox",
+                  "required": false,
+                  "error_message": "Please indicate if you experienced loss of income.",
+                  "options": [
+                    "Yes"
+                  ],
+                  "readOnly": false
+                },
+                {
+                  "label": "Inaccessible Resources",
+                  "type": "checkbox",
+                  "required": false,
+                  "error_message": "Please indicate if you have inaccessible resources.",
+                  "options": [
+                    "Yes"
+                  ],
+                  "readOnly": false
+                },
+                {
+                  "label": "Disaster-Related Expenses",
+                  "type": "checkbox",
+                  "required": false,
+                  "error_message": "Please indicate if you have disaster-related expenses.",
+                  "options": [
+                    "Yes"
+                  ],
+                  "readOnly": false
+                },
+                {
+                  "label": "Food Loss",
+                  "type": "checkbox",
+                  "required": false,
+                  "error_message": "Please indicate if you experienced food loss.",
+                  "options": [
+                    "Yes"
+                  ],
+                  "readOnly": false
+                },
+                {
+                  "label": "Describe Disaster Impact",
+                  "type": "textarea",
+                  "required": true,
+                  "error_message": "Please describe the disaster impact.",
+                  "readOnly": false
+                }
+              ]
+            }
+          ],
+          "data_validation": [
+            "If 'Loss of Income' is checked, description must include income details",
+            "If 'Disaster-Related Expenses' is checked, description must include expense details",
+            "If 'Food Loss' is checked, description must include food loss details"
+          ],
+          "buttons": [
+            {
+              "icon": "arrow-right",
+              "position": "bottom-right",
+              "button_type": "screen button",
+              "label": "Continue",
+              "actor": "Applicant",
+              "description": "Proceed to enter financial information.",
+              "actions": [
+                "Navigate to Enter Financial Information"
+              ]
+            }
+          ],
+          "owner": "Applicant",
+          "step_number": "1_3",
+          "node_id": "STEP_1_3",
+          "navigation": {
+            "menu_group": "Disaster Impact",
+            "display_order": 3,
+            "icon": "disaster",
+            "breadcrumb": [
+              "Home",
+              "Benefits",
+              "Disaster Impact"
+            ]
+          },
+          "page_level_buttons": {
+            "header_buttons": [
+              {
+                "button_id": "Back",
+                "label": "Back",
+                "description": "Go back to the previous screen.",
+                "type": "ghost",
+                "icon": "arrow-left",
+                "button_type": "header button",
+                "position": "left",
+                "action": {
+                  "type": "navigation",
+                  "navigation_config": {
+                    "target": "STEP_1_2",
+                    "confirm_required": false,
+                    "confirm_message": "Go back to previous screen?",
+                    "data_loss_warning": true
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [
+                    "current_step > 1"
+                  ],
+                  "hide_conditions": [
+                    "first_step"
+                  ]
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "Home",
+                "label": "Home",
+                "description": "Return to the dashboard home.",
+                "type": "ghost",
+                "icon": "home",
+                "button_type": "header button",
+                "position": "left",
+                "action": {
+                  "type": "navigation",
+                  "navigation_config": {
+                    "target": "dashboard",
+                    "confirm_required": false,
+                    "confirm_message": "Return to dashboard?",
+                    "data_loss_warning": true
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "Help",
+                "label": "Help",
+                "description": "Get help for describing disaster impact.",
+                "type": "ghost",
+                "icon": "help",
+                "button_type": "header button",
+                "position": "right",
+                "action": {
+                  "type": "modal",
+                  "modal_config": {
+                    "title": "Help: Disaster Impact",
+                    "content_source": "/help/disaster-impact",
+                    "size": "medium"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "User_Profile",
+                "label": "User Profile",
+                "description": "View and edit your user profile.",
+                "type": "ghost",
+                "icon": "user",
+                "button_type": "header button",
+                "position": "right",
+                "action": {
+                  "type": "modal",
+                  "modal_config": {
+                    "title": "User Profile",
+                    "content_source": "/profile",
+                    "size": "medium"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              }
+            ],
+            "footer_buttons": [
+              {
+                "button_id": "Continue",
+                "label": "Continue",
+                "description": "Proceed to enter financial information.",
+                "type": "primary",
+                "icon": "arrow-right",
+                "button_type": "footer button",
+                "position": "right",
+                "action": {
+                  "type": "workflow_navigation",
+                  "logic": {
+                    "workflow_steps": [
+                      {
+                        "step": 1,
+                        "step_name": "validate_fields",
+                        "description": "Validate disaster impact details.",
+                        "actions": [
+                          "ACTION_2"
+                        ],
+                        "conditions": {
+                          "success_message": [
+                            "Disaster impact details validated."
+                          ],
+                          "error_message": [
+                            "Please complete all required disaster impact fields."
+                          ]
+                        }
+                      },
+                      {
+                        "step": 2,
+                        "step_name": "redirect_to_next_screen",
+                        "description": "Navigate to Financial Information Entry screen.",
+                        "actions": [
+                          "ACTION_3"
+                        ],
+                        "conditions": {
+                          "success_message": [
+                            "Navigated to financial information entry."
+                          ],
+                          "error_message": [
+                            "Navigation failed."
+                          ]
+                        }
+                      }
+                    ],
+                    "execution_flow": {
+                      "sequential": true,
+                      "allow_skip": false,
+                      "retry_on_failure": false,
+                      "max_retries": 0
+                    }
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {
+                  "required_fields": [
+                    {
+                      "field_id": "Describe Disaster Impact",
+                      "field_name": "Describe Disaster Impact",
+                      "field_type": "textarea",
+                      "validation_type": "mandatory",
+                      "error_message": "Please describe the disaster impact.",
+                      "dependency": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "screen_number": 4,
+          "id": "STEP_1_4",
+          "step": "1_4",
+          "type": "Screen",
+          "label": "Financial Information Entry",
+          "description": "Provide your household's financial details for the benefit period. Enter total household income, accessible liquid resources, and disaster-related expenses. This information is used to determine your eligibility for benefits.",
+          "details": [
+            {
+              "label": "Household Financial Details",
+              "repeatable_section": false,
+              "fields": [
+                {
+                  "label": "Total Household Income",
+                  "type": "currency",
+                  "required": true,
+                  "error_message": "Please enter total household income.",
+                  "readOnly": false
+                },
+                {
+                  "label": "Accessible Liquid Resources",
+                  "type": "currency",
+                  "required": true,
+                  "error_message": "Please enter accessible liquid resources.",
+                  "readOnly": false
+                },
+                {
+                  "label": "Disaster-Related Expenses",
+                  "type": "currency",
+                  "required": true,
+                  "error_message": "Please enter disaster-related expenses.",
+                  "readOnly": false
+                }
+              ]
+            }
+          ],
+          "data_validation": [
+            "Income cannot be negative",
+            "Accessible liquid resources cannot be negative",
+            "Disaster-related expenses cannot be negative",
+            "Total household income must be consistent with household composition",
+            "If income is zero, explanation required in disaster impact"
+          ],
+          "buttons": [
+            {
+              "icon": "arrow-right",
+              "position": "bottom-right",
+              "button_type": "screen button",
+              "label": "Continue",
+              "actor": "Applicant",
+              "description": "Proceed to upload or present required documentation.",
+              "actions": [
+                "Navigate to Upload/Present Required Documentation"
+              ]
+            }
+          ],
+          "owner": "Applicant",
+          "step_number": "1_4",
+          "node_id": "STEP_1_4",
+          "navigation": {
+            "menu_group": "Financial Information",
+            "display_order": 4,
+            "icon": "finance",
+            "breadcrumb": [
+              "Home",
+              "Benefits",
+              "Financial Information"
+            ]
+          },
+          "page_level_buttons": {
+            "header_buttons": [
+              {
+                "button_id": "Back",
+                "label": "Back",
+                "description": "Go back to the previous screen.",
+                "type": "ghost",
+                "icon": "arrow-left",
+                "button_type": "header button",
+                "position": "left",
+                "action": {
+                  "type": "navigation",
+                  "navigation_config": {
+                    "target": "STEP_1_3",
+                    "confirm_required": false,
+                    "confirm_message": "Go back to previous screen?",
+                    "data_loss_warning": true
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [
+                    "current_step > 1"
+                  ],
+                  "hide_conditions": [
+                    "first_step"
+                  ]
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "Home",
+                "label": "Home",
+                "description": "Return to the dashboard home.",
+                "type": "ghost",
+                "icon": "home",
+                "button_type": "header button",
+                "position": "left",
+                "action": {
+                  "type": "navigation",
+                  "navigation_config": {
+                    "target": "dashboard",
+                    "confirm_required": false,
+                    "confirm_message": "Return to dashboard?",
+                    "data_loss_warning": true
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "Help",
+                "label": "Help",
+                "description": "Get help for entering financial information.",
+                "type": "ghost",
+                "icon": "help",
+                "button_type": "header button",
+                "position": "right",
+                "action": {
+                  "type": "modal",
+                  "modal_config": {
+                    "title": "Help: Financial Information",
+                    "content_source": "/help/financial-info",
+                    "size": "medium"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "User_Profile",
+                "label": "User Profile",
+                "description": "View and edit your user profile.",
+                "type": "ghost",
+                "icon": "user",
+                "button_type": "header button",
+                "position": "right",
+                "action": {
+                  "type": "modal",
+                  "modal_config": {
+                    "title": "User Profile",
+                    "content_source": "/profile",
+                    "size": "medium"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              }
+            ],
+            "footer_buttons": [
+              {
+                "button_id": "Continue",
+                "label": "Continue",
+                "description": "Proceed to upload or present required documentation.",
+                "type": "primary",
+                "icon": "arrow-right",
+                "button_type": "footer button",
+                "position": "right",
+                "action": {
+                  "type": "workflow_navigation",
+                  "logic": {
+                    "workflow_steps": [
+                      {
+                        "step": 1,
+                        "step_name": "validate_fields",
+                        "description": "Validate financial information fields.",
+                        "actions": [
+                          "ACTION_2"
+                        ],
+                        "conditions": {
+                          "success_message": [
+                            "Financial information validated."
+                          ],
+                          "error_message": [
+                            "Please complete all required financial fields."
+                          ]
+                        }
+                      },
+                      {
+                        "step": 2,
+                        "step_name": "redirect_to_next_screen",
+                        "description": "Navigate to Upload/Present Required Documentation screen.",
+                        "actions": [
+                          "ACTION_3"
+                        ],
+                        "conditions": {
+                          "success_message": [
+                            "Navigated to documentation upload."
+                          ],
+                          "error_message": [
+                            "Navigation failed."
+                          ]
+                        }
+                      }
+                    ],
+                    "execution_flow": {
+                      "sequential": true,
+                      "allow_skip": false,
+                      "retry_on_failure": false,
+                      "max_retries": 0
+                    }
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {
+                  "required_fields": [
+                    {
+                      "field_id": "Total Household Income",
+                      "field_name": "Total Household Income",
+                      "field_type": "currency",
+                      "validation_type": "mandatory",
+                      "error_message": "Please enter total household income.",
+                      "dependency": ""
+                    },
+                    {
+                      "field_id": "Accessible Liquid Resources",
+                      "field_name": "Accessible Liquid Resources",
+                      "field_type": "currency",
+                      "validation_type": "mandatory",
+                      "error_message": "Please enter accessible liquid resources.",
+                      "dependency": ""
+                    },
+                    {
+                      "field_id": "Disaster-Related Expenses",
+                      "field_name": "Disaster-Related Expenses",
+                      "field_type": "currency",
+                      "validation_type": "mandatory",
+                      "error_message": "Please enter disaster-related expenses.",
+                      "dependency": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "screen_number": 5,
+          "id": "STEP_1_5",
+          "step": "1_5",
+          "type": "Screen",
+          "label": "Upload or Present Documentation",
+          "description": "Upload or present required documents to verify your identity, residency, and disaster impact. You may upload files or indicate that you will present documents in person. Accepted documents include government-issued ID, proof of address, and evidence of loss or inaccessibility. Review the list of required documents and ensure all are provided.",
+          "details": [
+            {
+              "label": "Identity Verification",
+              "repeatable_section": false,
+              "fields": [
+                {
+                  "label": "Proof of Identity",
+                  "type": "file",
+                  "required": true,
+                  "error_message": "Please upload proof of identity.",
+                  "readOnly": false
+                }
+              ]
+            },
+            {
+              "label": "Residency Verification",
+              "repeatable_section": false,
+              "fields": [
+                {
+                  "label": "Proof of Residency",
+                  "type": "file",
+                  "required": false,
+                  "error_message": "Please upload proof of residency.",
+                  "readOnly": false
+                }
+              ]
+            },
+            {
+              "label": "Disaster Impact Documentation",
+              "repeatable_section": false,
+              "fields": [
+                {
+                  "label": "Evidence of Loss/Inaccessibility",
+                  "type": "file",
+                  "required": false,
+                  "error_message": "Please upload evidence of loss or inaccessibility.",
+                  "readOnly": false
+                }
+              ]
+            }
+          ],
+          "data_validation": [
+            "Proof of identity is required",
+            "If residency cannot be verified, applicant must acknowledge attempt",
+            "Uploaded files must be in accepted formats (PDF, JPG, PNG)",
+            "File size must not exceed 10MB per document"
+          ],
+          "buttons": [
+            {
+              "icon": "upload",
+              "position": "bottom-right",
+              "button_type": "screen button",
+              "label": "Submit Application",
+              "actor": "Applicant",
+              "description": "Submit your application and documentation for review.",
+              "actions": [
+                "Trigger Submit Application"
+              ]
+            }
+          ],
+          "owner": "Applicant",
+          "step_number": "1_5",
+          "node_id": "STEP_1_5",
+          "navigation": {
+            "menu_group": "Documentation",
+            "display_order": 5,
+            "icon": "upload",
+            "breadcrumb": [
+              "Home",
+              "Benefits",
+              "Documentation"
+            ]
+          },
+          "page_level_buttons": {
+            "header_buttons": [
+              {
+                "button_id": "Back",
+                "label": "Back",
+                "description": "Go back to the previous screen.",
+                "type": "ghost",
+                "icon": "arrow-left",
+                "button_type": "header button",
+                "position": "left",
+                "action": {
+                  "type": "navigation",
+                  "navigation_config": {
+                    "target": "STEP_1_4",
+                    "confirm_required": false,
+                    "confirm_message": "Go back to previous screen?",
+                    "data_loss_warning": true
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [
+                    "current_step > 1"
+                  ],
+                  "hide_conditions": [
+                    "first_step"
+                  ]
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "Home",
+                "label": "Home",
+                "description": "Return to the dashboard home.",
+                "type": "ghost",
+                "icon": "home",
+                "button_type": "header button",
+                "position": "left",
+                "action": {
+                  "type": "navigation",
+                  "navigation_config": {
+                    "target": "dashboard",
+                    "confirm_required": false,
+                    "confirm_message": "Return to dashboard?",
+                    "data_loss_warning": true
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "Help",
+                "label": "Help",
+                "description": "Get help for uploading or presenting documentation.",
+                "type": "ghost",
+                "icon": "help",
+                "button_type": "header button",
+                "position": "right",
+                "action": {
+                  "type": "modal",
+                  "modal_config": {
+                    "title": "Help: Documentation",
+                    "content_source": "/help/documentation",
+                    "size": "medium"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              },
+              {
+                "button_id": "User_Profile",
+                "label": "User Profile",
+                "description": "View and edit your user profile.",
+                "type": "ghost",
+                "icon": "user",
+                "button_type": "header button",
+                "position": "right",
+                "action": {
+                  "type": "modal",
+                  "modal_config": {
+                    "title": "User Profile",
+                    "content_source": "/profile",
+                    "size": "medium"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {}
+              }
+            ],
+            "footer_buttons": [
+              {
+                "button_id": "Submit_Application",
+                "label": "Submit Application",
+                "description": "Submit your application and documentation for review.",
+                "type": "primary",
+                "icon": "upload",
+                "button_type": "footer button",
+                "position": "right",
+                "action": {
+                  "type": "api_call",
+                  "endpoint_config": {
+                    "endpoint": "/api/application/submit",
+                    "method": "POST",
+                    "confirm_required": true,
+                    "success_message": "Application submitted successfully.",
+                    "error_handling": "toast"
+                  }
+                },
+                "visibility": {
+                  "show_conditions": [],
+                  "hide_conditions": []
+                },
+                "validation": {
+                  "required_fields": [
+                    {
+                      "field_id": "Proof of Identity",
+                      "field_name": "Proof of Identity",
+                      "field_type": "file",
+                      "validation_type": "mandatory",
+                      "error_message": "Please upload proof of identity.",
+                      "dependency": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "actions": [
+        {
+          "ACTION_1": {
+            "id": "ACTION_1",
+            "name": "Trigger Household Information Entry",
+            "implementation": "Navigates to the Household Information Entry screen after validating the selected application channel.",
+            "trigger": "Rule",
+            "triggerCondition": "Application channel selected",
+            "sequence": 1,
+            "linkedWidgetIds": [
+              "STEP_2"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "STEP_2",
+      "step": 2,
+      "type": "Screen",
+      "label": "Household Information Entry",
+      "description": "On this screen, you will enter details about your household. Please provide the names, relationships, date of disaster, address, household composition, and contact information for all household members. Instructions are provided for each field, and you can add multiple household members as needed.",
+      "details": [
+        {
+          "label": "Household Members",
+          "repeatable_section": true,
+          "fields": [
+            {
+              "label": "Full Name",
+              "type": "text",
+              "required": true,
+              "error_message": "Full name is required.",
+              "readOnly": false
+            },
+            {
+              "label": "Relationship to Applicant",
+              "type": "dropdown",
+              "required": true,
+              "error_message": "Relationship is required.",
+              "options": [
+                "Self",
+                "Spouse",
+                "Child",
+                "Parent",
+                "Sibling",
+                "Other"
+              ],
+              "readOnly": false
+            },
+            {
+              "label": "Date of Birth",
+              "type": "date/time",
+              "required": true,
+              "error_message": "Date of birth is required.",
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "label": "Disaster Details",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Date of Disaster",
+              "type": "date/time",
+              "required": true,
+              "error_message": "Date of disaster is required.",
+              "readOnly": false
+            },
+            {
+              "label": "Disaster Address",
+              "type": "address",
+              "required": true,
+              "error_message": "Disaster address is required.",
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "label": "Contact Information",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Primary Phone Number",
+              "type": "phone",
+              "required": true,
+              "error_message": "Phone number is required.",
+              "readOnly": false
+            },
+            {
+              "label": "Email Address",
+              "type": "text",
+              "required": false,
+              "error_message": "Email address must be valid.",
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Cannot have more than one 'Self' relationship",
+        "Cannot have duplicate spouse entries",
+        "Birth date cannot be in the future",
+        "Phone number must be valid format",
+        "If married, spouse information is required",
+        "Address must be complete"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Continue",
+          "actor": "Applicant",
+          "description": "Proceed to enter disaster impact details",
+          "actions": [
+            "Navigate to Enter Disaster Impact Details"
+          ]
+        }
+      ],
+      "owner": "Applicant",
+      "actions": [
+        {
+          "ACTION_2": {
+            "id": "ACTION_2",
+            "name": "Trigger Disaster Impact Details Entry",
+            "implementation": "Navigates to the Disaster Impact Details screen after validating household information.",
+            "trigger": "Rule",
+            "triggerCondition": "Household information validated",
+            "sequence": 1,
+            "linkedWidgetIds": [
+              "STEP_3"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "STEP_2",
+      "step": 2,
+      "type": "Rule",
+      "label": "Submit Application",
+      "description": "When the applicant clicks the 'Submit Application' button, the system records the application submission and triggers assignment to intake staff for further processing.",
+      "Input Parameter": [],
+      "details": {
+        "rules": [
+          {
+            "label": "Record Submission",
+            "logic": "Upon user action 'Submit Application', system creates a new application record with all entered data and timestamps the submission."
+          },
+          {
+            "label": "Trigger Assignment",
+            "logic": "System initiates workflow to assign the submitted application to an available intake worker according to site/staffing rules."
+          }
+        ]
+      },
+      "step_number": 2,
+      "node_id": "STEP_2",
+      "actions": [
+        {
+          "ACTION_3": {
+            "id": "ACTION_3",
+            "name": "Trigger Financial Information Entry",
+            "implementation": "Navigates to the Financial Information Entry screen after validating disaster impact details.",
+            "trigger": "Rule",
+            "triggerCondition": "Disaster impact details validated",
+            "sequence": 1,
+            "linkedWidgetIds": [
+              "STEP_4"
+            ]
+          }
+        },
+        {
+          "ACTION_4": {
+            "id": "ACTION_4",
+            "name": "Trigger Documentation Upload",
+            "implementation": "Navigates to the Upload/Present Required Documentation screen if disaster impact validation fails.",
+            "trigger": "Rule",
+            "triggerCondition": "Disaster impact validation failed",
+            "sequence": 2,
+            "linkedWidgetIds": [
+              "STEP_5"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "STEP_3",
+      "step": 3,
+      "type": "Screen",
+      "label": "Disaster Impact Details",
+      "description": "On this screen, you will provide information about how the disaster has affected your household. Please indicate any loss of income, inaccessible resources, disaster-related expenses, and food loss. Guidance is provided for each field to help you accurately describe your situation.",
+      "details": [
+        {
+          "label": "Disaster Impact",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Loss of Income",
+              "type": "checkbox",
+              "required": false,
+              "error_message": "Please indicate if you experienced loss of income.",
+              "options": [
+                "Yes"
+              ],
+              "readOnly": false
+            },
+            {
+              "label": "Inaccessible Resources",
+              "type": "checkbox",
+              "required": false,
+              "error_message": "Please indicate if you have inaccessible resources.",
+              "options": [
+                "Yes"
+              ],
+              "readOnly": false
+            },
+            {
+              "label": "Disaster Expenses",
+              "type": "number/currency",
+              "required": false,
+              "error_message": "Disaster expenses must be a valid amount.",
+              "readOnly": false
+            },
+            {
+              "label": "Food Loss",
+              "type": "checkbox",
+              "required": false,
+              "error_message": "Please indicate if you experienced food loss.",
+              "options": [
+                "Yes"
+              ],
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Disaster expenses cannot be negative",
+        "If loss of income is checked, details may be required in financial section",
+        "If food loss is checked, supporting documentation may be required"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Continue",
+          "actor": "Applicant",
+          "description": "Proceed to enter financial information",
+          "actions": [
+            "Navigate to Enter Financial Information"
+          ]
+        }
+      ],
+      "owner": "Applicant",
+      "actions": [
+        {
+          "ACTION_5": {
+            "id": "ACTION_5",
+            "name": "Mark Workflow Completion",
+            "implementation": "Marks the workflow as complete after the intake worker reviews the assigned application.",
+            "trigger": "Assignment",
+            "triggerCondition": "Application reviewed and marked as complete",
+            "sequence": 1,
+            "linkedWidgetIds": [
+              "STEP_4"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "STEP_3",
+      "step": 3,
+      "type": "Assignment",
+      "label": "Assign to Intake Worker",
+      "description": "System automatically assigns the submitted application to an available intake worker based on predefined site and staffing allocation rules. The assignment logic ensures load balancing, prioritizes staff availability, and considers the application channel (Online Portal, In-Person Site, or Mobile Unit). The system updates the application status to 'Assigned to Intake Worker' and records the assigned worker's ID for audit purposes.",
+      "Input Parameter": [
+        "site",
+        "staffing_rules",
+        "application_channel",
+        "application_status",
+        "intake_worker_availability"
+      ],
+      "details": {
+        "assignments": [
+          {
+            "label": "Assign to Intake Worker",
+            "logic": "Upon application submission, the system evaluates the applicant's selected site and application channel, retrieves current intake worker availability per staffing rules, and assigns the application to the next available intake worker at the appropriate site. The assignment is logged, and the application status is updated accordingly."
+          }
+        ]
+      },
+      "step_number": 3,
+      "node_id": "STEP_3",
+      "actions": [
+        {
+          "ACTION_6": {
+            "id": "ACTION_6",
+            "name": "Return to Application Channel Selection",
+            "implementation": "Navigates back to the Application Channel Selection screen.",
+            "trigger": "Rule",
+            "triggerCondition": "User clicks Return button",
+            "sequence": 1,
+            "linkedWidgetIds": [
+              "STEP_1"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "STEP_4",
+      "step": 4,
+      "type": "Screen",
+      "label": "Financial Information Entry",
+      "description": "On this screen, you will enter your household's financial information for the benefit period. Please provide details about household income, accessible liquid resources, and disaster-related expenses. Instructions are provided for each field to help you complete this section accurately.",
+      "details": [
+        {
+          "label": "Household Financials",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Household Income",
+              "type": "number/currency",
+              "required": true,
+              "error_message": "Household income is required.",
+              "readOnly": false
+            },
+            {
+              "label": "Accessible Liquid Resources",
+              "type": "number/currency",
+              "required": true,
+              "error_message": "Accessible liquid resources are required.",
+              "readOnly": false
+            },
+            {
+              "label": "Disaster-Related Expenses",
+              "type": "number/currency",
+              "required": false,
+              "error_message": "Disaster-related expenses must be a valid amount.",
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Income cannot be negative",
+        "Accessible liquid resources cannot be negative",
+        "Disaster-related expenses cannot be negative",
+        "If loss of income claimed, income must reflect reduction"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Continue",
+          "actor": "Applicant",
+          "description": "Proceed to upload or present required documentation",
+          "actions": [
+            "Navigate to Upload/Present Required Documentation"
+          ]
+        }
+      ],
+      "owner": "Applicant"
+    },
+    {
+      "id": "STEP_4",
+      "step": 4,
+      "type": "Task",
+      "label": "Intake Worker Task: Review Assigned Application",
+      "description": "Intake worker reviews the assigned application, verifies completeness of submitted information and documentation, and begins initial processing. The system routes the application to the intake worker based on site and staffing rules. The intake worker must confirm receipt, check for missing or inconsistent data, and prepare for applicant interview and eligibility review.",
+      "taskName": "Review Assigned Application",
+      "assignedTo": "Intake Worker",
+      "dueDateLogic": {
+        "type": "calculated",
+        "calculation": "currentDate + 4 hours"
+      },
+      "completionConditions": {
+        "type": "manual",
+        "logic": "Intake worker must confirm application receipt, review all submitted data and documentation for completeness and accuracy, flag any missing or questionable information, and mark the application as 'Reviewed' in the system."
+      },
+      "priorityLogic": {
+        "type": "manual",
+        "defaultPriority": "high"
+      },
+      "notifications": {
+        "enabled": true,
+        "type": [
+          "email",
+          "in-app"
+        ]
+      },
+      "step_number": 4,
+      "node_id": "STEP_4"
+    },
+    {
+      "id": "STEP_1",
+      "step": 5,
+      "type": "Screen",
+      "label": "Select Application Channel",
+      "description": "On this screen, you will choose how you wish to apply for D-SNAP benefits. Please select your preferred application channel: Online Portal, In-Person Site, or Mobile Unit. Guidance is provided to help you understand each option. Your selection will determine the next steps in your application process.",
+      "details": [
+        {
+          "label": "Application Channel Selection",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Application Channel",
+              "type": "radio",
+              "required": true,
+              "error_message": "Please select an application channel.",
+              "options": [
+                "Online Portal",
+                "In-Person Site",
+                "Mobile Unit"
+              ],
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Must select one application channel before proceeding"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Continue",
+          "actor": "Applicant",
+          "description": "Proceed to enter household information",
+          "actions": [
+            "Navigate to Enter Household Information"
+          ]
+        }
+      ],
+      "owner": "Applicant",
+      "step_number": 5,
+      "node_id": "STEP_5"
+    },
+    {
+      "id": "STEP_5",
+      "step": 5,
+      "type": "Screen",
+      "label": "Upload/Present Required Documentation",
+      "description": "On this screen, you will upload or present the required documentation to support your application. Please provide proof of identity, attempt residency verification, and any available documentation of loss or inaccessibility. Instructions are provided for each document type, and you can upload multiple files as needed.",
+      "details": [
+        {
+          "label": "Documentation Upload",
+          "repeatable_section": true,
+          "fields": [
+            {
+              "label": "Document Type",
+              "type": "dropdown",
+              "required": true,
+              "error_message": "Document type is required.",
+              "options": [
+                "Proof of Identity",
+                "Residency Verification",
+                "Loss/Inaccessibility Documentation"
+              ],
+              "readOnly": false
+            },
+            {
+              "label": "Upload Document",
+              "type": "file",
+              "required": true,
+              "error_message": "Document upload is required.",
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "At least one proof of identity document must be uploaded",
+        "Residency verification must be attempted",
+        "Uploaded files must be in accepted formats (PDF, JPG, PNG)",
+        "File size must not exceed 10MB per document"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Submit Application",
+          "actor": "Applicant",
+          "description": "Submit your application and documentation for review",
+          "actions": [
+            "Trigger Submit Application"
+          ]
+        }
+      ],
+      "owner": "Applicant",
+      "step_number": 5,
+      "node_id": "STEP_5"
+    },
+    {
+      "id": "STEP_6",
+      "step": 6,
+      "type": "Screen",
+      "label": "Application Submission Confirmation",
+      "description": "Your application and documentation have been submitted. This screen confirms your submission and explains the next steps. You will be assigned to an intake worker for review. Please keep your reference number for future inquiries.",
+      "details": [
+        {
+          "label": "Submission Confirmation",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Application Reference Number",
+              "type": "text",
+              "required": false,
+              "error_message": "Reference number is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Submission Date",
+              "type": "date/time",
+              "required": false,
+              "error_message": "Submission date is required.",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Reference number must be unique"
+      ],
+      "buttons": [
+        {
+          "icon": "check",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Finish",
+          "actor": "Applicant",
+          "description": "Complete submission and trigger assignment to intake worker",
+          "actions": [
+            "Trigger Assign to Intake Worker"
+          ]
+        }
+      ],
+      "owner": "Applicant"
+    },
+    {
+      "id": "STEP_6",
+      "step": 6,
+      "type": "Rule",
+      "label": "Interview Applicant",
+      "description": "Intake worker conducts an interview using a standardized script to confirm applicant's identity, residency, household composition, and disaster impact. Interview notes are entered into the system for recordkeeping and further verification.",
+      "Input Parameter": [],
+      "details": {
+        "rules": [
+          {
+            "label": "Conduct Interview",
+            "logic": "Intake worker follows interview script to verify identity, residency, household composition, and disaster impact with the applicant."
+          },
+          {
+            "label": "Record Interview Notes",
+            "logic": "Intake worker enters interview notes and any clarifications or discrepancies into the system for audit and eligibility determination."
+          }
+        ]
+      },
+      "step_number": 6,
+      "node_id": "STEP_6"
+    },
+    {
+      "id": "STEP_7",
+      "step": 7,
+      "type": "Screen",
+      "label": "Intake Worker Assignment",
+      "description": "The system is assigning your application to an available intake worker based on site and staffing rules. You will be notified once your application is assigned and ready for review.",
+      "details": [
+        {
+          "label": "Assignment Status",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Assignment Status",
+              "type": "text",
+              "required": false,
+              "error_message": "Assignment status is required.",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Application must be assigned to an available intake worker"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Proceed to Review",
+          "actor": "Intake Worker",
+          "description": "Navigate to review application and documentation",
+          "actions": [
+            "Navigate to Review Application and Documentation"
+          ]
+        }
+      ],
+      "owner": "System"
+    },
+    {
+      "id": "STEP_7",
+      "step": 7,
+      "type": "Rule",
+      "label": "Verify Identity and Attempt Residency/Impact Verification",
+      "description": "System prompts intake worker to confirm the applicant's identity document, check residency, and review evidence of loss/inaccessibility. Any questionable information is flagged for further review.",
+      "Input Parameter": [],
+      "details": {
+        "rules": [
+          {
+            "label": "Identity Verification",
+            "logic": "Intake worker confirms the validity of the identity document presented by the applicant."
+          },
+          {
+            "label": "Residency Verification",
+            "logic": "Intake worker checks residency information against provided documentation and system records."
+          },
+          {
+            "label": "Impact Verification",
+            "logic": "Intake worker reviews evidence of disaster-related loss or inaccessibility and flags any questionable or missing information for further review."
+          }
+        ]
+      },
+      "step_number": 7,
+      "node_id": "STEP_7"
+    },
+    {
+      "id": "STEP_8",
+      "step": 8,
+      "type": "Screen",
+      "label": "Review Application and Documentation",
+      "description": "As an intake worker, you will review the applicant's submitted information and uploaded documentation. This screen displays all application details, household information, disaster impact, financials, and attached documents. You can view, download, and flag items for further review. Guidance is provided for what to look for in each section.",
+      "details": [
+        {
+          "label": "Application Details",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Applicant Name",
+              "type": "text",
+              "required": false,
+              "error_message": "Applicant name is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Application Channel",
+              "type": "text",
+              "required": false,
+              "error_message": "Application channel is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Date of Disaster",
+              "type": "date/time",
+              "required": false,
+              "error_message": "Date of disaster is required.",
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "label": "Household Members",
+          "repeatable_section": true,
+          "fields": [
+            {
+              "label": "Full Name",
+              "type": "text",
+              "required": false,
+              "error_message": "Full name is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Relationship to Applicant",
+              "type": "text",
+              "required": false,
+              "error_message": "Relationship is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Date of Birth",
+              "type": "date/time",
+              "required": false,
+              "error_message": "Date of birth is required.",
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "label": "Disaster Impact",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Loss of Income",
+              "type": "checkbox",
+              "required": false,
+              "error_message": "Loss of income is required.",
+              "options": [
+                "Yes"
+              ],
+              "readOnly": true
+            },
+            {
+              "label": "Inaccessible Resources",
+              "type": "checkbox",
+              "required": false,
+              "error_message": "Inaccessible resources is required.",
+              "options": [
+                "Yes"
+              ],
+              "readOnly": true
+            },
+            {
+              "label": "Disaster Expenses",
+              "type": "number/currency",
+              "required": false,
+              "error_message": "Disaster expenses is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Food Loss",
+              "type": "checkbox",
+              "required": false,
+              "error_message": "Food loss is required.",
+              "options": [
+                "Yes"
+              ],
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "label": "Financial Information",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Household Income",
+              "type": "number/currency",
+              "required": false,
+              "error_message": "Household income is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Accessible Liquid Resources",
+              "type": "number/currency",
+              "required": false,
+              "error_message": "Accessible liquid resources is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Disaster-Related Expenses",
+              "type": "number/currency",
+              "required": false,
+              "error_message": "Disaster-related expenses is required.",
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "label": "Uploaded Documentation",
+          "repeatable_section": true,
+          "fields": [
+            {
+              "label": "Document Type",
+              "type": "text",
+              "required": false,
+              "error_message": "Document type is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Document File",
+              "type": "file",
+              "required": false,
+              "error_message": "Document file is required.",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "All required documentation must be present",
+        "Review for completeness and consistency across sections",
+        "Flag questionable or missing information for further review"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Proceed to Interview",
+          "actor": "Intake Worker",
+          "description": "Begin applicant interview and confirm details",
+          "actions": [
+            "Trigger Interview Applicant"
+          ]
+        }
+      ],
+      "owner": "Intake Worker"
+    },
+    {
+      "id": "STEP_8",
+      "step": 8,
+      "type": "Rule",
+      "label": "Eligibility Determination",
+      "description": "System calculates applicant eligibility for D-SNAP benefits based on entered data and program rules. Intake worker reviews the system's determination and confirms eligibility status.",
+      "Input Parameter": [],
+      "details": {
+        "rules": [
+          {
+            "label": "Eligibility Calculation",
+            "logic": "System applies program eligibility rules to all entered applicant data to determine eligibility status."
+          },
+          {
+            "label": "Intake Worker Confirmation",
+            "logic": "Intake worker reviews calculated eligibility and confirms or overrides based on supporting documentation and interview notes."
+          }
+        ]
+      },
+      "step_number": 8,
+      "node_id": "STEP_8"
+    },
+    {
+      "id": "STEP_9",
+      "step": 9,
+      "type": "Screen",
+      "label": "Applicant Interview",
+      "description": "On this screen, you will conduct an interview with the applicant to confirm their identity, residency, household composition, and disaster impact. Use the provided interview script and enter your notes in the designated area. Guidance is provided for key questions and required confirmations.",
+      "details": [
+        {
+          "label": "Interview Notes",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Interview Script",
+              "type": "textarea",
+              "required": false,
+              "error_message": "Interview script is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Interview Notes",
+              "type": "textarea",
+              "required": true,
+              "error_message": "Interview notes are required.",
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Interview notes must be entered before proceeding",
+        "Confirm identity and residency during interview",
+        "Household composition must match application"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Proceed to Verification",
+          "actor": "Intake Worker",
+          "description": "Verify identity and attempt residency/impact verification",
+          "actions": [
+            "Trigger Verify Identity and Attempt Residency/Impact Verification"
+          ]
+        }
+      ],
+      "owner": "Intake Worker"
+    },
+    {
+      "id": "STEP_9",
+      "step": 9,
+      "type": "Rule",
+      "label": "Duplicate Participation Check",
+      "description": "Intake worker initiates a duplicate participation check by clicking the 'Run Duplicate Check' button. The system searches for matches across programs and flags any potential duplicates for review.",
+      "Input Parameter": [],
+      "details": {
+        "rules": [
+          {
+            "label": "Initiate Duplicate Check",
+            "logic": "Upon intake worker action, system searches for applicant and household matches in current and historical program participation records."
+          },
+          {
+            "label": "Flag Duplicates",
+            "logic": "System flags any records with matching identifiers (e.g., name, SSN, address) for intake worker review."
+          }
+        ]
+      },
+      "step_number": 9,
+      "node_id": "STEP_9"
+    },
+    {
+      "id": "STEP_10",
+      "step": 10,
+      "type": "Screen",
+      "label": "Identity, Residency, and Impact Verification",
+      "description": "On this screen, you will verify the applicant's identity, residency, and evidence of disaster impact. The system prompts you to confirm the provided documents and flag any questionable information for further review. Guidance is provided for verification steps and documentation review.",
+      "details": [
+        {
+          "label": "Verification Checklist",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Identity Document Verified",
+              "type": "checkbox",
+              "required": true,
+              "error_message": "Identity verification is required.",
+              "options": [
+                "Verified"
+              ],
+              "readOnly": false
+            },
+            {
+              "label": "Residency Verified",
+              "type": "checkbox",
+              "required": true,
+              "error_message": "Residency verification is required.",
+              "options": [
+                "Verified"
+              ],
+              "readOnly": false
+            },
+            {
+              "label": "Disaster Impact Evidence Reviewed",
+              "type": "checkbox",
+              "required": true,
+              "error_message": "Disaster impact evidence review is required.",
+              "options": [
+                "Reviewed"
+              ],
+              "readOnly": false
+            },
+            {
+              "label": "Flag for Further Review",
+              "type": "checkbox",
+              "required": false,
+              "error_message": "Flag status is required.",
+              "options": [
+                "Flagged"
+              ],
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Identity and residency must be verified before proceeding",
+        "If flagged for further review, notes must be entered",
+        "All required evidence must be reviewed"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Proceed to Eligibility Determination",
+          "actor": "Intake Worker",
+          "description": "Calculate eligibility and review results",
+          "actions": [
+            "Trigger Eligibility Determination"
+          ]
+        }
+      ],
+      "owner": "Intake Worker"
+    },
+    {
+      "id": "STEP_10",
+      "step": 10,
+      "type": "Rule",
+      "label": "Duplicate Participation Decision",
+      "description": "System displays the results of the duplicate participation check to the intake worker, who reviews and determines if duplicate participation exists.",
+      "Input Parameter": [],
+      "details": {
+        "rules": [
+          {
+            "label": "Display Duplicate Results",
+            "logic": "System presents duplicate check results, including matched records and relevant details, to the intake worker."
+          },
+          {
+            "label": "Intake Worker Review",
+            "logic": "Intake worker reviews flagged records and determines if duplicate participation is confirmed or if further investigation is needed."
+          }
+        ]
+      },
+      "step_number": 10,
+      "node_id": "STEP_10"
+    },
+    {
+      "id": "STEP_11",
+      "step": 11,
+      "type": "Screen",
+      "label": "Eligibility Determination",
+      "description": "On this screen, the system calculates the applicant's eligibility for D-SNAP benefits based on the entered data and program rules. You can review the eligibility results and confirm or request further review. Guidance is provided for interpreting the results.",
+      "details": [
+        {
+          "label": "Eligibility Results",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Eligibility Status",
+              "type": "text",
+              "required": false,
+              "error_message": "Eligibility status is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Eligibility Calculation Details",
+              "type": "textarea",
+              "required": false,
+              "error_message": "Calculation details are required.",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Eligibility calculation must be based on program rules",
+        "All required data must be present for calculation"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Run Duplicate Check",
+          "actor": "Intake Worker",
+          "description": "Check for duplicate participation across programs",
+          "actions": [
+            "Trigger Duplicate Participation Check"
+          ]
+        }
+      ],
+      "owner": "Intake Worker"
+    },
+    {
+      "id": "STEP_11",
+      "step": 11,
+      "type": "Assignment",
+      "label": "Assign to Certification Worker",
+      "description": "System routes the reviewed application record to a certification worker, ensuring that the assigned certification worker is not the same as the intake worker who previously handled the application. The assignment logic enforces separation of duties, checks certification worker availability, and updates the application status to 'Assigned to Certification Worker'. The system logs the assignment for audit and compliance tracking.",
+      "Input Parameter": [
+        "intake_worker_id",
+        "certification_worker_availability",
+        "application_status"
+      ],
+      "details": {
+        "assignments": [
+          {
+            "label": "Assign to Certification Worker",
+            "logic": "After intake review is complete, the system selects a certification worker who is available and not the same as the intake worker assigned to the application. The application is routed to this worker, the assignment is recorded, and the status is updated to reflect the new assignment."
+          }
+        ]
+      },
+      "step_number": 11,
+      "node_id": "STEP_11"
+    },
+    {
+      "id": "STEP_12",
+      "step": 12,
+      "type": "Screen",
+      "label": "Duplicate Participation Check",
+      "description": "On this screen, you will run a duplicate participation check to ensure the applicant is not receiving benefits from multiple programs. The system searches for matches and flags any potential duplicates. Guidance is provided for interpreting the results.",
+      "details": [
+        {
+          "label": "Duplicate Check Results",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Duplicate Status",
+              "type": "text",
+              "required": false,
+              "error_message": "Duplicate status is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Potential Matches",
+              "type": "textarea",
+              "required": false,
+              "error_message": "Potential matches are required.",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Duplicate check must be run before proceeding",
+        "Potential matches must be reviewed"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Review Duplicate Results",
+          "actor": "Intake Worker",
+          "description": "Review duplicate participation results",
+          "actions": [
+            "Trigger Duplicate Participation Decision"
+          ]
+        }
+      ],
+      "owner": "Intake Worker"
+    },
+    {
+      "id": "STEP_12",
+      "step": 12,
+      "type": "Task",
+      "label": "Certification Worker Task: Certify and Approve D-SNAP Benefits",
+      "description": "Certification worker reviews the assigned record, verifies that all intake steps are complete, confirms separation of duties, and prepares to certify and approve D-SNAP benefits. The system routes the record to the certification worker after intake review. The certification worker must validate eligibility determination, ensure all documentation is present, and approve or deny benefits as appropriate.",
+      "taskName": "Certify and Approve D-SNAP Benefits",
+      "assignedTo": "Certification Worker",
+      "dueDateLogic": {
+        "type": "calculated",
+        "calculation": "after previous step completion + 1 day"
+      },
+      "completionConditions": {
+        "type": "manual",
+        "logic": "Certification worker must review all intake data and documentation, confirm eligibility determination, ensure separation of duties, and click 'Approve Benefits' or 'Deny Benefits' in the system. Task is complete when benefits are approved/denied and system records the action."
+      },
+      "priorityLogic": {
+        "type": "manual",
+        "defaultPriority": "high"
+      },
+      "notifications": {
+        "enabled": true,
+        "type": [
+          "email",
+          "in-app"
+        ]
+      },
+      "step_number": 12,
+      "node_id": "STEP_12"
+    },
+    {
+      "id": "STEP_13",
+      "step": 13,
+      "type": "Screen",
+      "label": "Duplicate Participation Decision",
+      "description": "On this screen, you will review the results of the duplicate participation check. The system displays any flagged matches for your review. You can confirm or request further investigation. Guidance is provided for making a decision.",
+      "details": [
+        {
+          "label": "Duplicate Decision",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Duplicate Participation Confirmed",
+              "type": "checkbox",
+              "required": false,
+              "error_message": "Duplicate participation confirmation is required.",
+              "options": [
+                "Confirmed"
+              ],
+              "readOnly": false
+            },
+            {
+              "label": "Decision Notes",
+              "type": "textarea",
+              "required": false,
+              "error_message": "Decision notes are required.",
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "If duplicate participation is confirmed, notes must be entered",
+        "Decision must be recorded before proceeding"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Assign to Certification Worker",
+          "actor": "Intake Worker",
+          "description": "Route record to certification worker for final review",
+          "actions": [
+            "Trigger Assign to Certification Worker"
+          ]
+        }
+      ],
+      "owner": "Intake Worker"
+    },
+    {
+      "id": "STEP_13",
+      "step": 13,
+      "type": "Rule",
+      "label": "Certify and Approve D-SNAP Benefits",
+      "description": "Certification worker reviews all application data, confirms separation of duties, and clicks the 'Approve Benefits' button to certify and approve D-SNAP benefits.",
+      "Input Parameter": [],
+      "details": {
+        "rules": [
+          {
+            "label": "Review Application Data",
+            "logic": "Certification worker reviews all data, including eligibility determination, interview notes, and duplicate check results."
+          },
+          {
+            "label": "Confirm Separation of Duties",
+            "logic": "Certification worker verifies that intake and certification roles are performed by different individuals."
+          },
+          {
+            "label": "Approve Benefits",
+            "logic": "Certification worker clicks 'Approve Benefits' to finalize benefit approval in the system."
+          }
+        ]
+      },
+      "step_number": 13,
+      "node_id": "STEP_13"
+    },
+    {
+      "id": "STEP_14",
+      "step": 14,
+      "type": "Screen",
+      "label": "Certification Worker Assignment",
+      "description": "The system is assigning the record to a certification worker, ensuring separation of duties. You will be notified once the record is ready for certification and approval.",
+      "details": [
+        {
+          "label": "Certification Assignment Status",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Assignment Status",
+              "type": "text",
+              "required": false,
+              "error_message": "Assignment status is required.",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Record must be assigned to a certification worker"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Proceed to Certification",
+          "actor": "Certification Worker",
+          "description": "Review and certify D-SNAP benefits",
+          "actions": [
+            "Trigger Certify and Approve D-SNAP Benefits"
+          ]
+        }
+      ],
+      "owner": "System"
+    },
+    {
+      "id": "STEP_14",
+      "step": 14,
+      "type": "Rule",
+      "label": "Issue D-SNAP Benefits via EBT",
+      "description": "System generates a new EBT card or loads benefits to an existing card, records the issuance, and reconciles inventory to ensure accurate benefit delivery.",
+      "Input Parameter": [],
+      "details": {
+        "rules": [
+          {
+            "label": "Generate or Load EBT Card",
+            "logic": "System creates a new EBT card for the applicant or loads approved benefits onto an existing card."
+          },
+          {
+            "label": "Record Issuance",
+            "logic": "System records the issuance of benefits, including card number, amount, and date."
+          },
+          {
+            "label": "Reconcile Inventory",
+            "logic": "System updates inventory records to reflect EBT card issuance and benefit disbursement."
+          }
+        ]
+      },
+      "step_number": 14,
+      "node_id": "STEP_14"
+    },
+    {
+      "id": "STEP_15",
+      "step": 15,
+      "type": "Screen",
+      "label": "Certify and Approve D-SNAP Benefits",
+      "description": "On this screen, you will review all data and confirm separation of duties before approving D-SNAP benefits. Review the application, documentation, and eligibility determination. Click 'Approve Benefits' to certify and proceed to benefit issuance.",
+      "details": [
+        {
+          "label": "Certification Review",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Certification Confirmation",
+              "type": "checkbox",
+              "required": true,
+              "error_message": "Certification confirmation is required.",
+              "options": [
+                "I confirm separation of duties and approve benefits"
+              ],
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Certification confirmation must be checked before approving",
+        "Separation of duties must be confirmed"
+      ],
+      "buttons": [
+        {
+          "icon": "check",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Approve Benefits",
+          "actor": "Certification Worker",
+          "description": "Approve D-SNAP benefits and trigger benefit issuance",
+          "actions": [
+            "Trigger Issue D-SNAP Benefits via EBT"
+          ]
+        }
+      ],
+      "owner": "Certification Worker"
+    },
+    {
+      "id": "STEP_15",
+      "step": 15,
+      "type": "Rule",
+      "label": "Notify Applicant of Approval",
+      "description": "System sends an approval notification to the applicant via email, SMS, or prints an approval letter for in-person applicants.",
+      "Input Parameter": [],
+      "details": {
+        "rules": [
+          {
+            "label": "Send Notification",
+            "logic": "System sends approval notification using the applicant's preferred communication method (email, SMS, or printed letter)."
+          },
+          {
+            "label": "Record Notification",
+            "logic": "System logs the notification event, including method, timestamp, and recipient details."
+          }
+        ]
+      },
+      "step_number": 15,
+      "node_id": "STEP_15"
+    },
+    {
+      "id": "STEP_16",
+      "step": 16,
+      "type": "Screen",
+      "label": "Issue D-SNAP Benefits via EBT",
+      "description": "On this screen, the system generates an EBT card or loads benefits to an existing card. The issuance is recorded and inventory is reconciled. You will see confirmation of benefit issuance and instructions for next steps.",
+      "details": [
+        {
+          "label": "EBT Issuance",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "EBT Card Number",
+              "type": "text",
+              "required": false,
+              "error_message": "EBT card number is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Benefit Amount",
+              "type": "number/currency",
+              "required": false,
+              "error_message": "Benefit amount is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Issuance Date",
+              "type": "date/time",
+              "required": false,
+              "error_message": "Issuance date is required.",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "EBT card number must be valid",
+        "Benefit amount must match eligibility determination",
+        "Issuance must be recorded"
+      ],
+      "buttons": [
+        {
+          "icon": "arrow-right",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Notify Applicant of Approval",
+          "actor": "Certification Worker",
+          "description": "Send approval notification to applicant",
+          "actions": [
+            "Trigger Notify Applicant of Approval"
+          ]
+        }
+      ],
+      "owner": "Certification Worker"
+    },
+    {
+      "id": "STEP_16",
+      "step": 16,
+      "type": "Rule",
+      "label": "Notify Applicant of Denial",
+      "description": "System sends a denial notification to the applicant via email, SMS, or prints a denial letter for in-person applicants. The notification includes information about fair hearing rights.",
+      "Input Parameter": [],
+      "details": {
+        "rules": [
+          {
+            "label": "Send Denial Notification",
+            "logic": "System sends denial notification using the applicant's preferred communication method (email, SMS, or printed letter), including fair hearing rights information."
+          },
+          {
+            "label": "Record Notification",
+            "logic": "System logs the notification event, including method, timestamp, recipient details, and fair hearing rights content."
+          }
+        ]
+      },
+      "step_number": 16,
+      "node_id": "STEP_16"
+    },
+    {
+      "id": "STEP_17",
+      "step": 17,
+      "type": "Screen",
+      "label": "Applicant Approval Notification",
+      "description": "On this screen, the system sends an approval notification to the applicant via email, SMS, or prints an approval letter for in-person applicants. You will see confirmation of notification delivery and instructions for applicant follow-up.",
+      "details": [
+        {
+          "label": "Approval Notification",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Notification Method",
+              "type": "dropdown",
+              "required": true,
+              "error_message": "Notification method is required.",
+              "options": [
+                "Email",
+                "SMS",
+                "Printed Letter"
+              ],
+              "readOnly": false
+            },
+            {
+              "label": "Notification Status",
+              "type": "text",
+              "required": false,
+              "error_message": "Notification status is required.",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Notification method must be selected",
+        "Notification status must be recorded"
+      ],
+      "buttons": [
+        {
+          "icon": "check",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Finish",
+          "actor": "System",
+          "description": "Complete approval notification process",
+          "actions": [
+            "Trigger Notify Applicant of Denial"
+          ]
+        }
+      ],
+      "owner": "System"
+    },
+    {
+      "id": "STEP_18",
+      "step": 18,
+      "type": "Screen",
+      "label": "Applicant Denial Notification",
+      "description": "On this screen, the system sends a denial notification to the applicant via email, SMS, or prints a denial letter for in-person applicants. The notification includes information about fair hearing rights and instructions for next steps.",
+      "details": [
+        {
+          "label": "Denial Notification",
+          "repeatable_section": false,
+          "fields": [
+            {
+              "label": "Notification Method",
+              "type": "dropdown",
+              "required": true,
+              "error_message": "Notification method is required.",
+              "options": [
+                "Email",
+                "SMS",
+                "Printed Letter"
+              ],
+              "readOnly": false
+            },
+            {
+              "label": "Notification Status",
+              "type": "text",
+              "required": false,
+              "error_message": "Notification status is required.",
+              "readOnly": true
+            },
+            {
+              "label": "Fair Hearing Rights Provided",
+              "type": "checkbox",
+              "required": true,
+              "error_message": "Fair hearing rights confirmation is required.",
+              "options": [
+                "Provided"
+              ],
+              "readOnly": false
+            }
+          ]
+        }
+      ],
+      "data_validation": [
+        "Notification method must be selected",
+        "Fair hearing rights must be provided",
+        "Notification status must be recorded"
+      ],
+      "buttons": [
+        {
+          "icon": "check",
+          "position": "bottom-right",
+          "button_type": "screen button",
+          "label": "Finish",
+          "actor": "System",
+          "description": "Complete denial notification process",
+          "actions": [
+            "Trigger End of Process"
+          ]
+        }
+      ],
+      "owner": "System"
+    }
+  ],
+  "relationships": [
+    {
+      "startNode": "STEP_1",
+      "endNode": "STEP_1_1",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_1_1",
+      "endNode": "Application Channel Selection",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Application Channel Selection",
+      "endNode": "Application Channel",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_1",
+      "endNode": "STEP_1_2",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_1_2",
+      "endNode": "Disaster and Address Details",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Disaster and Address Details",
+      "endNode": "Date of Disaster",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster and Address Details",
+      "endNode": "Household Address",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster and Address Details",
+      "endNode": "Contact Phone Number",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster and Address Details",
+      "endNode": "Email Address",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_1_2",
+      "endNode": "Household Members",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Household Members",
+      "endNode": "Full Name",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Members",
+      "endNode": "Relationship to Applicant",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Members",
+      "endNode": "Date of Birth",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Members",
+      "endNode": "SSN",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_1",
+      "endNode": "STEP_1_3",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_1_3",
+      "endNode": "Disaster Impact Information",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Disaster Impact Information",
+      "endNode": "Loss of Income",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Impact Information",
+      "endNode": "Inaccessible Resources",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Impact Information",
+      "endNode": "Disaster-Related Expenses",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Impact Information",
+      "endNode": "Food Loss",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Impact Information",
+      "endNode": "Describe Disaster Impact",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_1",
+      "endNode": "STEP_1_4",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_1_4",
+      "endNode": "Household Financial Details",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Household Financial Details",
+      "endNode": "Total Household Income",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Financial Details",
+      "endNode": "Accessible Liquid Resources",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Financial Details",
+      "endNode": "Disaster-Related Expenses",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_1",
+      "endNode": "STEP_1_5",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_1_5",
+      "endNode": "Identity Verification",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Identity Verification",
+      "endNode": "Proof of Identity",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_1_5",
+      "endNode": "Residency Verification",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Residency Verification",
+      "endNode": "Proof of Residency",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_1_5",
+      "endNode": "Disaster Impact Documentation",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Disaster Impact Documentation",
+      "endNode": "Evidence of Loss/Inaccessibility",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_1",
+      "endNode": "STEP_2",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_2",
+      "endNode": "Household Members",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Household Members",
+      "endNode": "Full Name",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Members",
+      "endNode": "Relationship to Applicant",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Members",
+      "endNode": "Date of Birth",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_2",
+      "endNode": "Disaster Details",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Disaster Details",
+      "endNode": "Date of Disaster",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Details",
+      "endNode": "Disaster Address",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_2",
+      "endNode": "Contact Information",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Contact Information",
+      "endNode": "Primary Phone Number",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Contact Information",
+      "endNode": "Email Address",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_2",
+      "endNode": "STEP_2",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_2",
+      "endNode": "STEP_3",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_3",
+      "endNode": "Disaster Impact",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Disaster Impact",
+      "endNode": "Loss of Income",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Impact",
+      "endNode": "Inaccessible Resources",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Impact",
+      "endNode": "Disaster Expenses",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Impact",
+      "endNode": "Food Loss",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_3",
+      "endNode": "STEP_3",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_3",
+      "endNode": "STEP_4",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_4",
+      "endNode": "Household Financials",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Household Financials",
+      "endNode": "Household Income",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Financials",
+      "endNode": "Accessible Liquid Resources",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Financials",
+      "endNode": "Disaster-Related Expenses",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_4",
+      "endNode": "STEP_4",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_4",
+      "endNode": "STEP_5",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_1",
+      "endNode": "Application Channel Selection",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Application Channel Selection",
+      "endNode": "Application Channel",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_5",
+      "endNode": "STEP_1",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_5",
+      "endNode": "Documentation Upload",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Documentation Upload",
+      "endNode": "Document Type",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Documentation Upload",
+      "endNode": "Upload Document",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_5",
+      "endNode": "STEP_5",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_5",
+      "endNode": "STEP_6",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_6",
+      "endNode": "Submission Confirmation",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Submission Confirmation",
+      "endNode": "Application Reference Number",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Submission Confirmation",
+      "endNode": "Submission Date",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_6",
+      "endNode": "STEP_6",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_6",
+      "endNode": "STEP_7",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_7",
+      "endNode": "Assignment Status",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Assignment Status",
+      "endNode": "Assignment Status",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_7",
+      "endNode": "STEP_7",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_7",
+      "endNode": "STEP_8",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_8",
+      "endNode": "Application Details",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Application Details",
+      "endNode": "Applicant Name",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Application Details",
+      "endNode": "Application Channel",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Application Details",
+      "endNode": "Date of Disaster",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_8",
+      "endNode": "Household Members",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Household Members",
+      "endNode": "Full Name",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Members",
+      "endNode": "Relationship to Applicant",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Household Members",
+      "endNode": "Date of Birth",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_8",
+      "endNode": "Disaster Impact",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Disaster Impact",
+      "endNode": "Loss of Income",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Impact",
+      "endNode": "Inaccessible Resources",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Impact",
+      "endNode": "Disaster Expenses",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Disaster Impact",
+      "endNode": "Food Loss",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_8",
+      "endNode": "Financial Information",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Financial Information",
+      "endNode": "Household Income",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Financial Information",
+      "endNode": "Accessible Liquid Resources",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Financial Information",
+      "endNode": "Disaster-Related Expenses",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_8",
+      "endNode": "Uploaded Documentation",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Uploaded Documentation",
+      "endNode": "Document Type",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Uploaded Documentation",
+      "endNode": "Document File",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_8",
+      "endNode": "STEP_8",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_8",
+      "endNode": "STEP_9",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_9",
+      "endNode": "Interview Notes",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Interview Notes",
+      "endNode": "Interview Script",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Interview Notes",
+      "endNode": "Interview Notes",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_9",
+      "endNode": "STEP_9",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_9",
+      "endNode": "STEP_10",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_10",
+      "endNode": "Verification Checklist",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Verification Checklist",
+      "endNode": "Identity Document Verified",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Verification Checklist",
+      "endNode": "Residency Verified",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Verification Checklist",
+      "endNode": "Disaster Impact Evidence Reviewed",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Verification Checklist",
+      "endNode": "Flag for Further Review",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_10",
+      "endNode": "STEP_10",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_10",
+      "endNode": "STEP_11",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_11",
+      "endNode": "Eligibility Results",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Eligibility Results",
+      "endNode": "Eligibility Status",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Eligibility Results",
+      "endNode": "Eligibility Calculation Details",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_11",
+      "endNode": "STEP_11",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_11",
+      "endNode": "STEP_12",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_12",
+      "endNode": "Duplicate Check Results",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Duplicate Check Results",
+      "endNode": "Duplicate Status",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Duplicate Check Results",
+      "endNode": "Potential Matches",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_12",
+      "endNode": "STEP_12",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_12",
+      "endNode": "STEP_13",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_13",
+      "endNode": "Duplicate Decision",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Duplicate Decision",
+      "endNode": "Duplicate Participation Confirmed",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Duplicate Decision",
+      "endNode": "Decision Notes",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_13",
+      "endNode": "STEP_13",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_13",
+      "endNode": "STEP_14",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_14",
+      "endNode": "Certification Assignment Status",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Certification Assignment Status",
+      "endNode": "Assignment Status",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_14",
+      "endNode": "STEP_14",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_14",
+      "endNode": "STEP_15",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_15",
+      "endNode": "Certification Review",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Certification Review",
+      "endNode": "Certification Confirmation",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_15",
+      "endNode": "STEP_15",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_15",
+      "endNode": "STEP_16",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_16",
+      "endNode": "EBT Issuance",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "EBT Issuance",
+      "endNode": "EBT Card Number",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "EBT Issuance",
+      "endNode": "Benefit Amount",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "EBT Issuance",
+      "endNode": "Issuance Date",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_16",
+      "endNode": "STEP_16",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_16",
+      "endNode": "STEP_17",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_17",
+      "endNode": "Approval Notification",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Approval Notification",
+      "endNode": "Notification Method",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Approval Notification",
+      "endNode": "Notification Status",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_17",
+      "endNode": "STEP_17",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "STEP_17",
+      "endNode": "STEP_18",
+      "relationship": "HAS_NEXT_STEP"
+    },
+    {
+      "startNode": "STEP_18",
+      "endNode": "Denial Notification",
+      "relationship": "HAS_SECTION"
+    },
+    {
+      "startNode": "Denial Notification",
+      "endNode": "Notification Method",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Denial Notification",
+      "endNode": "Notification Status",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "Denial Notification",
+      "endNode": "Fair Hearing Rights Provided",
+      "relationship": "HAS_FIELD"
+    },
+    {
+      "startNode": "STEP_18",
+      "endNode": "STEP_18",
+      "relationship": "HAS_SECTION"
+    }
+  ]
+}

@@ -1,0 +1,362 @@
+{
+  "projectInfo": {
+    "name": "{PROGRAM_NAME}",
+    "createdDate": "ISO timestamp",
+    "metadataFiles": [],
+    "workflowType": "to_be_determined",
+    "technologyStack": {
+      "frontend": "React",
+      "backend": "FastAPI", 
+      "database": "SQLite/MariaDB",
+      "stateManagement": "react-use-wizard",
+      "batchProcessing": "Prefect",
+      "authentication": "JWT",
+      "validation": "Pydantic",
+      "orm": "SQLAlchemy"
+    }
+  },
+  "autonomousExecution": {
+    "mode": "enabled",
+    "continuousExecution": true,
+    "stopConditions": {
+      "allTasksComplete": true,
+      "userInterventionRequired": false,
+      "criticalErrorEncountered": false
+    },
+    "actionDeclaration": {
+      "required": true,
+      "format": "EXECUTING|ANALYZING|COMPLETED|CONTINUING TO|RETRYING|ESCALATING"
+    },
+    "autoDecisionMaking": {
+      "technologyStack": "use_defaults_unless_overridden",
+      "implementationPatterns": "follow_established_architecture",
+      "fileOrganization": "apply_framework_standards",
+      "errorRecovery": "attempt_standard_fixes_first"
+    }
+  },
+  "taskManagement": {
+    "currentTask": null,
+    "pendingTasks": [],
+    "completedTasks": [],
+    "failedTasks": [],
+    "taskSequence": [],
+    "dependencyTracking": true,
+    "autoProgression": true,
+    "progressPercentage": 0
+  },
+  "executionState": {
+    "canResume": false,
+    "nextAction": "Analyze user request and generate tasks",
+    "contextPreserved": false,
+    "lastPromptExecuted": null,
+    "lastExecutionMode": null,
+    "lastCompletedTask": null,
+    "blockedReason": null
+  },
+  "userDecisions": {
+    "metadataFile": null,
+    "specialRequirements": [],
+    "technologyStack": {
+      "frontend": "React (default)",
+      "backend": "FastAPI (default)",
+      "database": "SQLite/MariaDB (default)",
+      "stateManagement": "react-use-wizard (default)",
+      "batchProcessing": "Prefect (default)"
+    },
+    "customizations": {},
+    "deploymentPreferences": {
+      "environment": "development",
+      "containerization": false,
+      "cloudProvider": null
+    }
+  },
+  "fileTracking": {
+    "generatedFiles": {},
+    "modifiedFiles": {},
+    "backupFiles": {},
+    "dependencies": {}
+  },
+  "qualityAssurance": {
+    "autoValidation": true,
+    "testCoverage": 0,
+    "codeComplexity": "low",
+    "performanceScore": 0,
+    "securityScore": 0,
+    "accessibilityScore": 0,
+    "integrationTests": [],
+    "validationSteps": []
+  },
+  "taskTemplates": {
+    "domain_model_creation": {
+      "taskId": "domain_model_{timestamp}",
+      "title": "Generate Data Models and Schemas",
+      "promptFile": "domain-model.md",
+      "mode": "create-models",
+      "dependencies": [],
+      "estimatedDuration": "30 minutes",
+      "status": "pending",
+      "deliverables": [
+        "SQLAlchemy models",
+        "Pydantic schemas", 
+        "Database table creation",
+        "Model registration"
+      ],
+      "validationSteps": [
+        "Check syntax errors",
+        "Verify PDM compliance",
+        "Test model creation",
+        "Validate relationships"
+      ]
+    },
+    "screen_generation": {
+      "taskId": "screen_gen_{timestamp}",
+      "title": "Generate React Screens and Services", 
+      "promptFile": "screen-generation.md",
+      "mode": "build-screens",
+      "dependencies": ["domain_model"],
+      "estimatedDuration": "45 minutes",
+      "status": "pending",
+      "deliverables": [
+        "React components",
+        "FastAPI services",
+        "Navigation registration",
+        "API integration"
+      ],
+      "validationSteps": [
+        "Component compilation check",
+        "API endpoint testing",
+        "Navigation validation",
+        "Integration testing"
+      ]
+    },
+    "flow_orchestration": {
+      "taskId": "flow_orch_{timestamp}",
+      "title": "Create Multi-Step Workflow",
+      "promptFile": "flow-orchestration.md", 
+      "mode": "build-flow",
+      "dependencies": ["domain_model", "screen_generation"],
+      "estimatedDuration": "60 minutes",
+      "status": "pending",
+      "deliverables": [
+        "react-use-wizard flow",
+        "Step components",
+        "Flow service endpoints",
+        "State management"
+      ],
+      "validationSteps": [
+        "Flow navigation testing",
+        "State persistence check",
+        "Step validation testing",
+        "End-to-end flow testing"
+      ]
+    },
+    "rules_engine": {
+      "taskId": "rules_eng_{timestamp}",
+      "title": "Implement Business Rules and Validation",
+      "promptFile": "rules-engine.md",
+      "mode": "create-rules", 
+      "dependencies": ["domain_model"],
+      "estimatedDuration": "40 minutes",
+      "status": "pending",
+      "deliverables": [
+        "Business rule services",
+        "Validation logic",
+        "Calculation engine",
+        "Workflow automation"
+      ],
+      "validationSteps": [
+        "Rule logic testing",
+        "Validation accuracy check",
+        "Calculation verification",
+        "Automation workflow testing"
+      ]
+    },
+    "batch_processing": {
+      "taskId": "batch_proc_{timestamp}",
+      "title": "Create Background Processing Jobs",
+      "promptFile": "batch-processing.md",
+      "mode": "create-batch",
+      "dependencies": ["domain_model"],
+      "estimatedDuration": "50 minutes",
+      "status": "pending",
+      "deliverables": [
+        "Prefect workflows",
+        "Background job services",
+        "Job scheduling",
+        "Performance monitoring"
+      ],
+      "validationSteps": [
+        "Workflow execution testing",
+        "Job scheduling verification",
+        "Performance monitoring check",
+        "Error handling validation"
+      ]
+    },
+    "defect_resolution": {
+      "taskId": "defect_res_{timestamp}",
+      "title": "Analyze and Fix Issues",
+      "promptFile": "defect-resolution.md",
+      "mode": "analyze-defect",
+      "dependencies": [],
+      "estimatedDuration": "20 minutes",
+      "status": "pending",
+      "deliverables": [
+        "Root cause analysis",
+        "Surgical fix implementation", 
+        "Fix verification",
+        "Testing validation"
+      ],
+      "validationSteps": [
+        "Issue reproduction",
+        "Fix effectiveness check",
+        "Regression testing",
+        "Integration verification"
+      ]
+    },
+    "scenario_map_integration": {
+      "taskId": "scenario_map_{timestamp}",
+      "title": "Integrate Scenario Map Orchestration",
+      "promptFile": "scenario-map-integration.md",
+      "mode": "integrate-scenario-map",
+      "dependencies": ["domain_model"],
+      "estimatedDuration": "25 minutes",
+      "status": "pending",
+      "deliverables": [
+        "Scenario map processing logic",
+        "Multi-scenario coordination",
+        "Conditional transition handling",
+        "Tracker-based intelligence"
+      ],
+      "validationSteps": [
+        "Scenario map parsing validation",
+        "Transition logic testing",
+        "Multi-scenario workflow testing",
+        "Integration verification"
+      ]
+    },
+    "enhancement_development": {
+      "taskId": "enhance_dev_{timestamp}",
+      "title": "Develop Feature Enhancements",
+      "promptFile": "enhancement-development.md",
+      "mode": "analyze-enhancement",
+      "dependencies": [],
+      "estimatedDuration": "35 minutes",
+      "status": "pending",
+      "deliverables": [
+        "Enhancement analysis",
+        "Feature implementation",
+        "Backward compatibility",
+        "Performance optimization"
+      ],
+      "validationSteps": [
+        "Feature functionality testing",
+        "Compatibility verification",
+        "Performance impact assessment",
+        "Integration testing"
+      ]
+    }
+  },
+  "workflowPatterns": {
+    "metadata_workflow_creation": {
+      "requiredTasks": ["domain_model_creation", "screen_generation", "rules_engine"],
+      "optionalTasks": ["flow_orchestration", "batch_processing"],
+      "executionOrder": ["domain_model_creation", "screen_generation", "rules_engine", "flow_orchestration"],
+      "autoExecution": true
+    },
+    "multi_step_flow_creation": {
+      "requiredTasks": ["domain_model_creation", "flow_orchestration"],
+      "optionalTasks": ["screen_generation", "rules_engine"],
+      "executionOrder": ["domain_model_creation", "flow_orchestration"],
+      "autoExecution": true
+    },
+    "single_screen_creation": {
+      "requiredTasks": ["domain_model_creation", "screen_generation"],
+      "optionalTasks": ["rules_engine"],
+      "executionOrder": ["domain_model_creation", "screen_generation", "rules_engine"],
+      "autoExecution": true
+    },
+    "business_rules_implementation": {
+      "requiredTasks": ["domain_model_creation", "rules_engine"],
+      "optionalTasks": ["batch_processing"],
+      "executionOrder": ["domain_model_creation", "rules_engine"],
+      "autoExecution": true
+    },
+    "background_processing": {
+      "requiredTasks": ["domain_model_creation", "batch_processing"],
+      "optionalTasks": ["rules_engine"],
+      "executionOrder": ["domain_model_creation", "batch_processing"],
+      "autoExecution": true
+    },
+    "bug_fix": {
+      "requiredTasks": ["defect_resolution"],
+      "optionalTasks": [],
+      "executionOrder": ["defect_resolution"],
+      "autoExecution": true
+    },
+    "scenario_map_orchestration": {
+      "requiredTasks": ["domain_model_creation", "scenario_map_integration"],
+      "optionalTasks": ["screen_generation", "flow_orchestration"],
+      "executionOrder": ["domain_model_creation", "scenario_map_integration"],
+      "autoExecution": true
+    },
+    "feature_enhancement": {
+      "requiredTasks": ["enhancement_development"],
+      "optionalTasks": ["domain_model_creation", "screen_generation"],
+      "executionOrder": ["enhancement_development"],
+      "autoExecution": true
+    }
+  },
+  "automation": {
+    "requestProcessing": {
+      "metadataDetection": {
+        "patterns": ["scenario_*.metadata.json", "metadata.json", "scenario_map.json", "pdm.json"],
+        "defaultPath": "./metadata/",
+        "autoSelect": true,
+        "scenarioMapSupport": true,
+        "pdmValidation": true
+      },
+      "intentRecognition": {
+        "keywords": {
+          "create": ["create", "generate", "build", "new"],
+          "extend": ["extend", "add", "enhance", "modify"],
+          "fix": ["fix", "resolve", "debug", "repair"],
+          "optimize": ["optimize", "improve", "performance", "speed"]
+        },
+        "modeMapping": {
+          "create": ["create-models", "build-screens", "build-flow", "create-rules", "create-batch"],
+          "extend": ["extend-models", "extend-screens", "extend-flow", "extend-rules", "extend-batch"],
+          "fix": ["analyze-defect", "surgical-fix", "verify-fix"],
+          "optimize": ["optimize-performance", "optimize-jobs"]
+        }
+      },
+      "taskGeneration": {
+        "autoGenerateFromRequest": true,
+        "includeDependencies": true,
+        "estimateTimelines": true,
+        "calculateProgress": true,
+        "autoExecution": true
+      }
+    },
+    "executionControl": {
+      "continuousExecution": true,
+      "autoProgression": true,
+      "dependencyManagement": true,
+      "errorRecovery": "automatic",
+      "userInterventionRequired": false
+    },
+    "progressTracking": {
+      "autoUpdateProgress": true,
+      "trackFileGeneration": true,
+      "monitorQualityMetrics": true,
+      "generateStatusReports": true,
+      "realTimeUpdates": true
+    },
+    "qualityValidation": {
+      "autoValidateGeneration": true,
+      "checkIntegrationPoints": true,
+      "validateFrameworkPatterns": true,
+      "performanceMonitoring": true,
+      "securityChecks": true
+    }
+  }
+}
