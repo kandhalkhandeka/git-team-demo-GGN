@@ -1,0 +1,332 @@
+{
+  "steps": [
+    {
+      "id": "STEP_1",
+      "type": "Batch",
+      "project_id": null,
+      "label": "Retrieve Active Applications",
+      "description": "This batch queries the application database to retrieve all records with status 'Active'. It serves as the initial extraction point for downstream eligibility processing.",
+      "triggerType": "Scheduled",
+      "schedule": "0 2 * * *",
+      "inputParameters": {
+        "status": "status",
+        "message": "message"
+      },
+      "steps": [
+        {
+          "step_id": "BATCH_STEP1",
+          "label": "Extract Active Applications",
+          "description": "Extract all application records where status is 'Active' from the application database.",
+          "type": "Extract",
+          "businessLogic": "SELECT * FROM applications WHERE status = 'Active';",
+          "errorHandling": {
+            "strategy": "Retry",
+            "maxRetries": 3,
+            "notification": "onFailure"
+          }
+        }
+      ],
+      "outputLocation": "staging/active_applications",
+      "data_validation": [
+        "Eligibility criteria must be present and not null.",
+        "No duplicate entries in the audit log.",
+        "All required fields for eligibility calculation must be present."
+      ],
+      "step_number": 1,
+      "step": 1,
+      "node_id": "STEP_1"
+    },
+    {
+      "id": "STEP_2",
+      "type": "Batch",
+      "project_id": null,
+      "label": "Fetch Latest Income Records",
+      "description": "This batch retrieves the most recent income records for each active application from the income records database or external data source.",
+      "triggerType": "Scheduled",
+      "schedule": "0 2 * * *",
+      "inputParameters": {
+        "status": "status",
+        "message": "message"
+      },
+      "steps": [
+        {
+          "step_id": "BATCH_STEP1",
+          "label": "Fetch Income Data",
+          "description": "For each active application, retrieve the latest associated income data.",
+          "type": "Extract",
+          "businessLogic": "SELECT * FROM income_records WHERE application_id IN (SELECT id FROM staging/active_applications) ORDER BY record_date DESC;",
+          "errorHandling": {
+            "strategy": "Retry",
+            "maxRetries": 3,
+            "notification": "onFailure"
+          }
+        }
+      ],
+      "outputLocation": "staging/application_income_records",
+      "data_validation": [
+        "Eligibility criteria must be present and not null.",
+        "No duplicate entries in the audit log.",
+        "All required fields for eligibility calculation must be present."
+      ],
+      "step_number": 2,
+      "step": 2,
+      "node_id": "STEP_2"
+    },
+    {
+      "id": "STEP_3",
+      "type": "Batch",
+      "project_id": null,
+      "label": "Evaluate SNAP Eligibility",
+      "description": "This batch applies SNAP eligibility rules to the income data for each application to determine eligibility status.",
+      "triggerType": "Scheduled",
+      "schedule": "0 2 * * *",
+      "inputParameters": {
+        "status": "status",
+        "message": "message"
+      },
+      "steps": [
+        {
+          "step_id": "BATCH_STEP1",
+          "label": "Apply SNAP Eligibility Rules",
+          "description": "Evaluate each application's income data against SNAP eligibility criteria.",
+          "type": "Rule",
+          "businessLogic": "For each application, if income <= SNAP threshold and all required fields are present, mark as eligible; else, mark as ineligible.",
+          "errorHandling": {
+            "strategy": "Retry",
+            "maxRetries": 3,
+            "notification": "onFailure"
+          }
+        }
+      ],
+      "outputLocation": "staging/snap_eligibility_results",
+      "data_validation": [
+        "Eligibility criteria must be present and not null.",
+        "No duplicate entries in the audit log.",
+        "All required fields for eligibility calculation must be present."
+      ],
+      "step_number": 3,
+      "step": 3,
+      "node_id": "STEP_3"
+    },
+    {
+      "id": "STEP_4",
+      "step": 4,
+      "type": "Rule",
+      "label": "Eligibility Decision",
+      "description": "Determine if the application meets SNAP eligibility criteria based on evaluated income data. If criteria are met, proceed to record the eligibility outcome in the audit log. If criteria are not met, skip audit logging and continue to the next application.",
+      "Input Parameter": [
+        "status",
+        "message"
+      ],
+      "details": {
+        "rules": [
+          {
+            "label": "Eligibility Met",
+            "logic": "If SNAP eligibility criteria are satisfied for the application, initiate audit logging for the eligibility outcome."
+          },
+          {
+            "label": "Eligibility Not Met",
+            "logic": "If SNAP eligibility criteria are not satisfied for the application, do not create an audit log entry and proceed to the next application."
+          }
+        ]
+      },
+      "step_number": 4,
+      "node_id": "STEP_4"
+    },
+    {
+      "id": "STEP_5",
+      "type": "Batch",
+      "project_id": null,
+      "label": "Record Eligibility in Audit Log",
+      "description": "This batch writes the eligibility outcome, application ID, income details, and timestamp to the audit log for traceability and compliance.",
+      "triggerType": "Scheduled",
+      "schedule": "0 2 * * *",
+      "inputParameters": {
+        "status": "status",
+        "message": "message"
+      },
+      "steps": [
+        {
+          "step_id": "BATCH_STEP1",
+          "label": "Write Eligibility Outcome to Audit Log",
+          "description": "Insert eligibility decision, application ID, income details, and timestamp into the audit log.",
+          "type": "Write",
+          "businessLogic": "INSERT INTO audit_log (application_id, eligibility_outcome, income_details, timestamp) VALUES (...);",
+          "errorHandling": {
+            "strategy": "Retry",
+            "maxRetries": 3,
+            "notification": "onFailure"
+          }
+        }
+      ],
+      "outputLocation": "audit_log/eligibility_entries",
+      "data_validation": [
+        "Eligibility criteria must be present and not null.",
+        "No duplicate entries in the audit log.",
+        "All required fields for eligibility calculation must be present."
+      ],
+      "step_number": 5,
+      "step": 5,
+      "node_id": "STEP_5"
+    },
+    {
+      "id": "STEP_6",
+      "type": "Batch",
+      "project_id": null,
+      "label": "Skip Audit Logging",
+      "description": "This batch skips audit logging for applications that do not meet eligibility criteria and continues processing the next application.",
+      "triggerType": "Scheduled",
+      "schedule": "0 2 * * *",
+      "inputParameters": {
+        "status": "status",
+        "message": "message"
+      },
+      "steps": [
+        {
+          "step_id": "BATCH_STEP1",
+          "label": "Skip Audit Log Entry",
+          "description": "No audit log entry is created for ineligible applications; proceed to next application.",
+          "type": "Filter",
+          "businessLogic": "IF eligibility_outcome = 'ineligible' THEN SKIP audit log entry.",
+          "errorHandling": {
+            "strategy": "Fail",
+            "maxRetries": 0,
+            "notification": "onFailure"
+          }
+        }
+      ],
+      "outputLocation": "staging/skipped_audit_log",
+      "data_validation": [
+        "Eligibility criteria must be present and not null.",
+        "No duplicate entries in the audit log.",
+        "All required fields for eligibility calculation must be present."
+      ],
+      "step_number": 6,
+      "step": 6,
+      "node_id": "STEP_6"
+    },
+    {
+      "id": "STEP_7",
+      "step": 7,
+      "type": "Rule",
+      "label": "Process Failure Decision",
+      "description": "Monitor for errors during any process step, including application retrieval, income record fetching, eligibility evaluation, or audit logging. If an error is detected, trigger the retry mechanism or alerting as appropriate.",
+      "Input Parameter": [
+        "status",
+        "message"
+      ],
+      "details": {
+        "rules": [
+          {
+            "label": "Error Detected",
+            "logic": "If status equals 'error' and message contains an error description, mark the process step as failed and initiate retry or alert workflow."
+          },
+          {
+            "label": "No Error Detected",
+            "logic": "If status does not indicate 'error', continue normal process execution."
+          }
+        ]
+      },
+      "step_number": 7,
+      "node_id": "STEP_7"
+    },
+    {
+      "id": "STEP_8",
+      "type": "Batch",
+      "project_id": null,
+      "label": "Retry Failed Process",
+      "description": "This batch automatically retries failed processing steps for an application, incrementing the retry count for each attempt.",
+      "triggerType": "Event-Based",
+      "schedule": "",
+      "inputParameters": {
+        "status": "status",
+        "message": "message"
+      },
+      "steps": [
+        {
+          "step_id": "BATCH_STEP1",
+          "label": "Retry Failed Step",
+          "description": "Re-execute the failed step for the application and increment the retry count.",
+          "type": "Transform",
+          "businessLogic": "IF process step fails, increment retry_count and re-execute the failed step for the application.",
+          "errorHandling": {
+            "strategy": "Retry",
+            "maxRetries": 5,
+            "notification": "onFailure"
+          }
+        }
+      ],
+      "outputLocation": "staging/retry_process_log",
+      "data_validation": [
+        "Eligibility criteria must be present and not null.",
+        "No duplicate entries in the audit log.",
+        "All required fields for eligibility calculation must be present."
+      ],
+      "step_number": 8,
+      "step": 8,
+      "node_id": "STEP_8"
+    },
+    {
+      "id": "STEP_9",
+      "step": 9,
+      "type": "Rule",
+      "label": "Retry Decision",
+      "description": "Check the retry count for the failed process step. If the retry count is below the maximum allowed threshold, re-execute the failed step. If the retry count has reached the threshold, escalate by sending an alert to the eligibility administrator.",
+      "Input Parameter": [
+        "status",
+        "message"
+      ],
+      "details": {
+        "rules": [
+          {
+            "label": "Retry Allowed",
+            "logic": "If the retry count for the failed process is less than the configured maximum, automatically retry the failed step."
+          },
+          {
+            "label": "Retry Limit Reached",
+            "logic": "If the retry count for the failed process equals or exceeds the configured maximum, do not retry and send an alert to the eligibility administrator."
+          }
+        ]
+      },
+      "step_number": 9,
+      "node_id": "STEP_9"
+    },
+    {
+      "id": "STEP_10",
+      "type": "Batch",
+      "project_id": null,
+      "label": "Send Alert to Eligibility Administrator",
+      "description": "This batch generates and sends an alert message containing the application ID, error details, and timestamp to the eligibility administrator via the configured notification channel.",
+      "triggerType": "Event-Based",
+      "schedule": "",
+      "inputParameters": {
+        "status": "status",
+        "message": "message"
+      },
+      "steps": [
+        {
+          "step_id": "BATCH_STEP1",
+          "label": "Send Alert Notification",
+          "description": "Generate and send an alert with application ID, error details, and timestamp to the administrator.",
+          "type": "Write",
+          "businessLogic": "Send notification (email or dashboard) to administrator with application ID, error details, and timestamp.",
+          "errorHandling": {
+            "strategy": "Fail",
+            "maxRetries": 0,
+            "notification": "onFailure"
+          }
+        }
+      ],
+      "outputLocation": "notifications/eligibility_admin_alerts",
+      "data_validation": [
+        "Eligibility criteria must be present and not null.",
+        "No duplicate entries in the audit log.",
+        "All required fields for eligibility calculation must be present."
+      ],
+      "step_number": 10,
+      "step": 10,
+      "node_id": "STEP_10"
+    }
+  ],
+  "relationships": []
+}
